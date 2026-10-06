@@ -3149,6 +3149,7 @@ function saveReturnState(){
   const state = student ? {who:'student', tab:st.tab, hub:st.hub, skill:st.skill, y:window.scrollY}
                         : {who:'teacher', view, level, exam, skill, y:window.scrollY};
   try { sessionStorage.setItem('lh-return', JSON.stringify({...state, at:Date.now()})); } catch(e){}
+  try { localStorage.setItem('pocHubReturnUrl', location.href); } catch(e){}   /* lets your apps' "← My Learning Hub" button find this exact page */
 }
 function takeReturnState(who){
   try {
