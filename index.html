@@ -874,6 +874,7 @@ body.partner-mode .date-btn .chg{display:none}
       <button class="btn-icon" data-action="refresh" aria-label="Refresh" title="Refresh"><svg class="i"><use href="#i-refresh"/></svg></button>
       <button class="btn btn-outline" data-action="backup"><svg class="i"><use href="#i-down"/></svg><span>Backup</span></button>
       <button class="btn btn-primary" data-action="add-link"><svg class="i"><use href="#i-plus"/></svg><span>Add link</span></button>
+      <button class="btn-icon" data-action="change-pw" aria-label="Change my password" title="Change my password"><svg class="i"><use href="#i-key"/></svg></button>
       <button class="btn-icon" data-action="logout" aria-label="Log out" title="Log out"><svg class="i"><use href="#i-logout"/></svg></button>
     </div>
   </div>
@@ -1185,6 +1186,18 @@ body.partner-mode .date-btn .chg{display:none}
   </div>
 </div>
 
+<!-- CHANGE PASSWORD -->
+<div class="overlay" id="mPw" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="mPwTitle">
+    <div class="modal-head"><h3 id="mPwTitle">Change my password</h3><button class="btn-icon" data-action="close" aria-label="Close"><svg class="i"><use href="#i-x"/></svg></button></div>
+    <form id="pwForm">
+      <div class="field"><label for="pwNew">New password (at least 8 characters)</label><input id="pwNew" type="password" minlength="8" required autocomplete="new-password"></div>
+      <div class="field"><label for="pwNew2">New password again</label><input id="pwNew2" type="password" minlength="8" required autocomplete="new-password"></div>
+      <p class="err" id="pwErr"></p>
+      <div class="modal-foot"><button type="button" class="btn btn-outline" data-action="close">Cancel</button><button type="submit" class="btn btn-primary">Save password</button></div>
+    </form>
+  </div>
+</div>
 <!-- INVITE MODAL -->
 <div class="overlay" id="mInvite" hidden>
   <div class="modal wide" role="dialog" aria-modal="true" aria-labelledby="mInvTitle">
@@ -1775,12 +1788,13 @@ async function loadPartnerData(){
   if (ROLE==='partner'){ ME_ROW = PARTNERS[0] || null; ME = ME_ROW ? ME_ROW.email : null; }
   if (ROLE==='owner'){
     /* you see your own students and the mutual ones; a partner's private students stay out of your lists */
-    const vis = new Set(data.students.filter(s=>!s.owner || s.shared).map(s=>s.id));
+    const partnerEmails = new Set(PARTNERS.map(p=>p.email));
+    const vis = new Set(data.students.filter(s=>!s.owner || s.shared || !partnerEmails.has(s.owner)).map(s=>s.id));   /* a student whose owner is not a partner is yours */
     data.students = data.students.filter(s=>vis.has(s.id));
     data.progress = data.progress.filter(p=>vis.has(p.student_id));
     data.submissions = data.submissions.filter(x=>vis.has(x.student_id));
     data.notes = data.notes.filter(n=>vis.has(n.student_id));
-    data.links = data.allLinks.filter(l=>!l.owner);          /* her own links never appear in your library */
+    data.links = data.allLinks.filter(l=>!l.owner || !partnerEmails.has(l.owner));          /* her own links never appear in your library */
   }
   const t = document.querySelector('.brand .tagline');
   if (t && ROLE==='partner') t.textContent = `Partner teacher · ${ME_ROW ? ME_ROW.name : ''}`;
@@ -2109,6 +2123,18 @@ function printSheet(){
   w.document.close();
 }
 
+async function changePassword(e){
+  e.preventDefault();
+  const a = $('pwNew').value, b = $('pwNew2').value;
+  if (a.length < 8){ $('pwErr').textContent = 'Use at least 8 characters.'; return; }
+  if (a !== b){ $('pwErr').textContent = 'The two passwords are different.'; return; }
+  busy(e.submitter, true);
+  const {error} = await sb.auth.updateUser({password:a});
+  busy(e.submitter, false);
+  if (error){ $('pwErr').textContent = error.message; return; }
+  closeAll(); toast('Password changed — use it next time you log in');
+}
+
 /* ================= events ================= */
 document.addEventListener('click', e=>{
   const t = e.target.closest('[data-action],[data-sales],[data-notes],[data-lang]'); if (!t) return;
@@ -2119,6 +2145,7 @@ document.addEventListener('click', e=>{
   if (a==='sales-settings'){ openSalesSettings(); return; }
   if (a==='sales-export'){ exportSales(); return; }
   if (a==='add-partner'){ addPartner(); return; }
+  if (a==='change-pw'){ $('pwForm').reset(); $('pwErr').textContent = ''; openModal('mPw'); return; }
   if (a==='bundle-date'){ if (ROLE==='owner'){ openBundleModal(data.packages.find(x=>x.id===t.dataset.id)); setTimeout(()=>{ $('pStart').focus(); try { $('pStart').showPicker(); } catch(_){} }, 60); } return; }
   if (a==='sheet-copy'){ copyText(sheetText(), 'Copied — paste it into an email or Messenger'); return; }
   if (a==='sheet-print'){ printSheet(); return; }
@@ -2156,6 +2183,7 @@ document.addEventListener('submit', e=>{
   if (e.target.id==='saleForm') saveSale(e);
   else if (e.target.id==='noteForm') saveNote(e);
   else if (e.target.id==='salesSetForm') saveSalesSettings(e);
+  else if (e.target.id==='pwForm') changePassword(e);
 });
 
 
