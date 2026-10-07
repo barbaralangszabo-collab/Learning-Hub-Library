@@ -770,6 +770,94 @@ body{overflow-x:clip}
   .brand-img, body.student-mode .brand-img{width:108px;height:108px}
   .brand .logo, body.student-mode .brand .logo{font-size:44px}
 }
+
+/* ---------- partner teacher, sales, notes ---------- */
+#sSharedWrap[hidden],#saleOtherWrap[hidden],#saleGiveWrap[hidden],#noteForStudentWrap[hidden],#saleSellerWrap[hidden],#tab-sales[hidden]{display:none!important}
+body.partner-mode [data-action="backup"], body.partner-mode #selToggle, body.partner-mode #findPics, body.partner-mode #tab-diary,
+body.partner-mode #remBanner, body.partner-mode [data-action="new-bundle"], body.partner-mode [data-action="edit-bundle"],
+body.partner-mode [data-action="del-bundle"], body.partner-mode [data-action="renew-bundle"], body.partner-mode [data-action="add-apps"],
+body.partner-mode [data-action="move-local"], body.partner-mode .owner-only{display:none!important}
+.tag.mine{background:var(--mint);color:var(--teal-ink)}
+.who-badge{align-self:flex-start;font-family:var(--ui);font-size:.74rem;font-weight:700;border-radius:999px;padding:3px 10px;background:var(--mint-soft);color:var(--teal);white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.shared-row{background:var(--mint-soft);margin:4px 0 8px}
+.last-note{margin:2px 0;font-family:var(--ui);font-size:.82rem;line-height:1.4;background:var(--surface-2);border-radius:10px;padding:7px 10px;color:var(--ink)}
+.last-note span{display:block;font-weight:700;color:var(--ink-soft);font-size:.74rem;margin-bottom:2px}
+.head-btns{display:flex;gap:8px;flex-wrap:wrap}
+.sales-tools{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:18px 0 6px}
+.sales-tools .seg{margin:0}
+.sales-tools .period{display:flex;align-items:center;gap:6px;font-family:var(--ui);font-size:1.05rem}
+.sales-tools .period .btn-icon{font-size:1.4rem;line-height:1}
+.sales-tools select{font-family:var(--ui);padding:8px 12px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.sum-cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:10px 0}
+.sum-card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:2px;font-family:var(--ui)}
+.sum-card span{font-size:.8rem;color:var(--ink-soft);font-weight:700}
+.sum-card b{font-size:1.45rem;color:var(--ink)}
+.sum-card small{font-size:.76rem;color:var(--ink-soft)}
+.note-box.balance{margin:4px 0 14px}
+.table-wrap{position:relative;overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}
+table.sales{width:100%;border-collapse:collapse;font-family:var(--ui);font-size:.9rem;min-width:720px}
+table.sales th{text-align:left;font-size:.76rem;color:var(--ink-soft);padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+table.sales td{padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:middle}
+table.sales td small{display:block;color:var(--ink-soft);font-size:.74rem}
+table.sales .num{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+table.sales tfoot td{font-weight:700;border-bottom:0}
+.tick{display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-family:var(--ui);font-size:.85rem}
+.tick input{width:18px;height:18px;accent-color:var(--teal)}
+.prod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.panel.prod h4{margin:0;font-family:var(--ui);font-size:1rem}
+.panel.prod .btn{align-self:flex-start}
+.notes-filter{margin:14px 0 8px;flex-wrap:wrap}
+.notes-filter button small{opacity:.7}
+.notes-list{display:flex;flex-direction:column;gap:8px;max-height:46vh;overflow:auto;padding:2px}
+.note-item{border:1px solid var(--line);border-left:4px solid var(--sage-line);border-radius:12px;padding:9px 12px;background:var(--surface)}
+.note-item.k-homework{border-left-color:var(--mint)}
+.note-item.k-note{border-left-color:var(--blush-line)}
+.note-item.done .nb{text-decoration:line-through;opacity:.6}
+.note-item .nh{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-family:var(--ui);font-size:.8rem}
+.note-item .nk{font-weight:700}
+.note-item .nm{color:var(--ink-soft);flex:1}
+.note-item .nb{margin:4px 0 2px;white-space:pre-wrap;font-family:var(--ui);font-size:.92rem;line-height:1.45}
+.note-form{border-bottom:1px solid var(--line);padding-bottom:6px}
+.sub-h{font-family:var(--ui);margin:18px 0 6px}
+.partner-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:6px 8px;border-radius:10px;background:var(--surface-2);margin-bottom:6px;font-family:var(--ui);font-size:.9rem}
+.note-box.steps{font-size:.86rem;line-height:1.5}
+.sheet-tools{display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap}
+.sheet-tools .seg{margin:0 0 4px}
+.sheet-tools .field{flex:1;min-width:220px;margin:0}
+.sheet-preview{margin:12px 0;border:1px solid var(--line);border-radius:18px;padding:18px;background:#fff;color:#2F3A42;max-height:52vh;overflow:auto}
+.sheet .sheet-top{background:#EEF7F4;border-radius:14px;padding:18px 20px;border-top:6px solid #49E8CC}
+.sheet .k{font:700 .7rem/1 var(--ui);letter-spacing:3px;color:#1F5F6D}
+.sheet h2{font-family:Georgia,serif;font-size:1.7rem;margin:8px 0 2px;color:#1F5F6D}
+.sheet .s{margin:0;font-family:var(--ui)}
+.sheet .pr{font:700 1.3rem var(--ui);margin:10px 0 0}
+.sheet .sheet-cols{display:flex;gap:22px;margin:16px 0}
+.sheet .sheet-cols>div{flex:1}
+.sheet h3{font:700 1rem var(--ui);color:#1F5F6D;margin:0 0 6px}
+.sheet ul{font-family:var(--ui);font-size:.9rem;line-height:1.5;padding-left:18px;margin:0}
+.sheet .demo,.sheet .contact{font-family:var(--ui);font-size:.9rem;margin:6px 0}
+.sheet a{color:#1F5F6D;word-break:break-all}
+.st-homework{background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--mint);border-radius:18px;padding:12px 18px;margin:0 0 14px;box-shadow:var(--shadow)}
+.st-homework h3{margin:0 0 6px;font-family:var(--ui);font-size:1.05rem}
+.st-homework ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.st-homework li{display:flex;gap:10px;align-items:baseline;font-family:var(--ui);font-size:.95rem;line-height:1.4}
+.st-homework .d{color:var(--ink-soft);font-size:.8rem;white-space:nowrap;min-width:74px}
+.st-homework .b{flex:1;white-space:pre-wrap}
+.st-homework li.done .b{text-decoration:line-through;opacity:.6}
+.st-homework .ok{color:var(--teal);font-weight:700;font-size:.8rem;white-space:nowrap}
+@media (max-width:900px){ .sum-cards{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width:600px){ .sheet .sheet-cols{flex-direction:column} .sum-card b{font-size:1.2rem} .head-btns .btn{flex:1 1 auto} }
+
+/* ---------- corrections highlighted ---------- */
+.cx del.cx-del,.cx-legend del.cx-del{background:#FBE1E1;color:#A3302F;text-decoration:line-through;text-decoration-thickness:2px;border-radius:4px;padding:0 2px}
+.cx ins.cx-ins,.cx-legend ins.cx-ins{background:#D5F5E6;color:#17694A;text-decoration:none;font-weight:700;border-radius:4px;padding:0 2px}
+.cx{white-space:pre-wrap;line-height:1.7}
+.cx-legend{margin:2px 0 6px;font-family:var(--ui);font-size:.8rem;display:flex;gap:8px}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .cx del.cx-del, :root:not([data-theme="light"]) .cx-legend del.cx-del{background:#4A2526;color:#F3B5B4} :root:not([data-theme="light"]) .cx ins.cx-ins, :root:not([data-theme="light"]) .cx-legend ins.cx-ins{background:#1E4436;color:#9FE5C4} }
+
+.date-btn{cursor:pointer;border:0;font-family:var(--ui);font-size:.82rem;font-weight:700;max-width:100%;white-space:normal;text-align:left}
+.date-btn .chg{font-size:.72rem;text-decoration:underline;opacity:.75;margin-left:4px}
+body.partner-mode .date-btn{pointer-events:none}
+body.partner-mode .date-btn .chg{display:none}
 </style>
 </head>
 <body>
@@ -795,6 +883,7 @@ body{overflow-x:clip}
   <button class="tab" role="tab" id="tab-hubs" aria-selected="false" data-action="go" data-view="hubs"><span class="em" aria-hidden="true">🏫</span>Class hubs <span class="sr">(<span id="c-hubs">0</span>)</span></button>
   <button class="tab" role="tab" id="tab-students" aria-selected="false" data-action="go" data-view="students"><span class="em" aria-hidden="true">🎓</span>Students <span class="sr">(<span id="c-stds">0</span>)</span></button>
   <button class="tab" role="tab" id="tab-diary" aria-selected="false" data-action="go" data-view="diary"><span class="em" aria-hidden="true">📅</span>Diary <span class="badge-n" id="c-rem" hidden>0</span></button>
+  <button class="tab" role="tab" id="tab-sales" aria-selected="false" data-action="go" data-view="sales" hidden><span class="em" aria-hidden="true">💰</span>Sales</button>
   <button class="tab" role="tab" id="tab-compositions" aria-selected="false" data-action="go" data-view="compositions"><span class="em" aria-hidden="true">📝</span>Compositions <span class="badge-n" id="c-new" hidden>0</span></button>
 </nav>
 
@@ -874,6 +963,20 @@ body{overflow-x:clip}
     <div class="agenda" id="agenda"></div>
   </section>
 
+  <!-- SALES -->
+  <section class="view" id="view-sales" hidden>
+    <div class="hero">
+      <div class="page-head"><h2>Sales</h2>
+        <div class="head-btns">
+          <button class="btn btn-outline" data-action="sales-export"><svg class="i"><use href="#i-down"/></svg>Download (CSV)</button>
+          <button class="btn btn-outline owner-only" data-action="sales-settings">⚙️ Prices &amp; partners</button>
+          <button class="btn btn-primary" data-action="sales-new"><svg class="i"><use href="#i-plus"/></svg>Record sale</button></div></div>
+      <p class="note-box">Every bundle, project or professional package sold, with the commission. Both teachers see the same summary of the partner's sales. Tick <b>Student paid</b> when the money has arrived and <b>Settled</b> when the share has been transferred.</p>
+    </div>
+    <div class="sales-tools" id="salesTools"></div>
+    <div id="salesBody"></div>
+  </section>
+
   <!-- ONE STUDENT'S FOLDER -->
   <section class="view" id="view-folder" hidden>
     <button class="btn btn-outline back" data-action="folder-back">Back</button>
@@ -926,7 +1029,7 @@ body{overflow-x:clip}
       <input type="hidden" id="pId">
       <div class="field"><label for="pTitle">Bundle name</label><input id="pTitle" required placeholder="e.g. Anna – Érettségi autumn term"></div>
       <div class="fields-3">
-        <div class="field"><label for="pStart">Start date</label><input id="pStart" type="date" required></div>
+        <div class="field"><label for="pStart">Start date (can be in the past)</label><input id="pStart" type="date" required></div>
         <div class="field"><label>Ends</label><p class="end-date" id="pEnd">–</p></div>
       </div>
       <div class="field"><label for="pQuick">Add every link from a hub</label><select id="pQuick"></select></div>
@@ -982,10 +1085,103 @@ body{overflow-x:clip}
       </div>
       <datalist id="purposeList"><option>Exam preparation</option><option>Job interview</option><option>Work / business English</option><option>Studying abroad</option><option>Moving abroad</option><option>Travel</option><option>School support</option><option>Personal interest</option></datalist>
       <datalist id="examList"><option>Érettségi (közép)</option><option>Érettségi (emelt)</option><option>Cambridge B2 First (FCE)</option><option>Cambridge C1 Advanced (CAE)</option><option>Cambridge C2 Proficiency</option><option>IELTS</option><option>TOEFL</option><option>Euroexam</option><option>Origo</option><option>LanguageCert</option></datalist>
+      <label class="pick-row shared-row" id="sSharedWrap" hidden><input type="checkbox" id="sShared"><span class="t" id="sSharedText">Mutual student</span></label>
       <div class="field"><label>Hubs</label><div class="hub-pick" id="sHubs"></div></div>
       <div class="field"><label for="sNotes">Notes</label><textarea id="sNotes" rows="2" placeholder="e.g. Exam in May"></textarea></div>
       <div class="modal-foot"><button type="button" class="btn btn-outline" data-action="close">Cancel</button><button type="submit" class="btn btn-primary">Save student</button></div>
     </form>
+  </div>
+</div>
+
+<!-- RECORD A SALE -->
+<div class="overlay" id="mSale" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="mSaleTitle">
+    <div class="modal-head"><h3 id="mSaleTitle">Record a sale</h3><button class="btn-icon" data-action="close" aria-label="Close"><svg class="i"><use href="#i-x"/></svg></button></div>
+    <form id="saleForm">
+      <div class="field"><label for="saleStudent">Student</label><select id="saleStudent"></select></div>
+      <div class="field"><label for="saleProduct">What was sold</label><select id="saleProduct"></select></div>
+      <div class="field" id="saleOtherWrap" hidden><label for="saleOther">Name of the product</label><input id="saleOther" placeholder="e.g. Exam crash course"></div>
+      <div class="fields-3">
+        <div class="field"><label for="salePrice">Price (Ft)</label><input id="salePrice" type="number" min="0" step="500" required></div>
+        <div class="field"><label for="saleDate">Date</label><input id="saleDate" type="date" required></div>
+        <div class="field" id="saleSellerWrap"><label for="saleSeller">Sold by</label><select id="saleSeller"></select></div>
+      </div>
+      <p class="hint" id="saleComm"></p>
+      <label class="pick-row"><input type="checkbox" id="salePaid"><span class="t">The student has already paid</span></label>
+      <label class="pick-row" id="saleGiveWrap"><input type="checkbox" id="saleGive" checked><span class="t">Give the student access now</span></label>
+      <div class="field"><label for="saleNote">Note (optional)</label><input id="saleNote" placeholder="e.g. renewal, discount, paid by transfer"></div>
+      <div class="modal-foot"><button type="button" class="btn btn-outline" data-action="close">Cancel</button><button type="submit" class="btn btn-primary">Save sale</button></div>
+    </form>
+  </div>
+</div>
+
+<!-- NOTES, CLASS NOTES & HOMEWORK -->
+<div class="overlay" id="mNotes" hidden>
+  <div class="modal wide" role="dialog" aria-modal="true" aria-labelledby="mNotesTitle">
+    <div class="modal-head"><h3 id="mNotesTitle">Notes</h3><button class="btn-icon" data-action="close" aria-label="Close"><svg class="i"><use href="#i-x"/></svg></button></div>
+    <form id="noteForm" class="note-form">
+      <div class="fields-3">
+        <div class="field"><label for="noteKind">Type</label><select id="noteKind">
+          <option value="class">🗒️ Class notes – what we did</option>
+          <option value="homework">📚 Homework</option>
+          <option value="note">💬 Note for each other</option></select></div>
+        <div class="field"><label for="noteDate">Date</label><input id="noteDate" type="date"></div>
+      </div>
+      <div class="field"><label for="noteBody">Note</label><textarea id="noteBody" rows="3" placeholder="e.g. Unit 4 reading, conditionals revised. Struggles with listening – more podcasts."></textarea></div>
+      <label class="pick-row" id="noteForStudentWrap" hidden><input type="checkbox" id="noteForStudent" checked><span class="t">Show this homework on the student's page</span></label>
+      <div class="modal-foot"><button type="submit" class="btn btn-primary">Save note</button></div>
+    </form>
+    <div class="seg notes-filter" id="notesFilter" role="group" aria-label="Show"></div>
+    <div class="notes-list" id="notesList"></div>
+    <p class="hint">Class notes and notes for each other are only for the teachers. For mutual students both teachers see and can add notes.</p>
+  </div>
+</div>
+
+<!-- PRODUCT SHEET -->
+<div class="overlay" id="mSheet" hidden>
+  <div class="modal wide" role="dialog" aria-modal="true" aria-labelledby="mSheetTitle">
+    <div class="modal-head"><h3 id="mSheetTitle">Product sheet</h3><button class="btn-icon" data-action="close" aria-label="Close"><svg class="i"><use href="#i-x"/></svg></button></div>
+    <div class="sheet-tools">
+      <div class="seg" role="group" aria-label="Language"><button type="button" data-lang="hu" aria-pressed="true">Magyar</button><button type="button" data-lang="en" aria-pressed="false">English</button></div>
+      <div class="field"><label for="sheetContact">Contact line</label><input id="sheetContact" placeholder="e.g. Kata · kata@example.com · +36 30 123 4567"></div>
+    </div>
+    <div id="sheetPreview" class="sheet-preview"></div>
+    <div class="modal-foot">
+      <button type="button" class="btn btn-outline" data-action="sheet-mail">✉️ Email</button>
+      <button type="button" class="btn btn-outline" data-action="sheet-print">🖨️ Print / save PDF</button>
+      <button type="button" class="btn btn-primary" data-action="sheet-copy"><svg class="i"><use href="#i-copy"/></svg>Copy text</button></div>
+  </div>
+</div>
+
+<!-- PRICES & PARTNERS (owner) -->
+<div class="overlay" id="mSalesSet" hidden>
+  <div class="modal wide" role="dialog" aria-modal="true" aria-labelledby="mSalesSetTitle">
+    <div class="modal-head"><h3 id="mSalesSetTitle">Prices &amp; partners</h3><button class="btn-icon" data-action="close" aria-label="Close"><svg class="i"><use href="#i-x"/></svg></button></div>
+    <form id="salesSetForm">
+      <div class="fields-3">
+        <div class="field"><label for="setPBundle">3-month bundle (Ft)</label><input id="setPBundle" type="number" min="0" step="500"></div>
+        <div class="field"><label for="setPBaking">Baking with Alice project (Ft)</label><input id="setPBaking" type="number" min="0" step="500"></div>
+        <div class="field"><label for="setPPro">Professional English (Ft)</label><input id="setPPro" type="number" min="0" step="500"></div>
+      </div>
+      <div class="fields-3">
+        <div class="field"><label for="setCollects">Who collects the payments?</label><select id="setCollects">
+          <option value="partner">The partner – she transfers my share</option>
+          <option value="owner">I do – I pay her commission</option></select></div>
+        <div class="field"><label for="setOwnerName">Your name (on notes &amp; sheets)</label><input id="setOwnerName"></div>
+      </div>
+      <div class="field"><label for="setDemo">Demo link on product sheets</label><input id="setDemo" type="url"></div>
+      <p class="hint">Changing a price only affects new sales; recorded sales keep their price.</p>
+      <div class="modal-foot"><button type="submit" class="btn btn-primary">Save settings</button></div>
+    </form>
+    <h4 class="sub-h">Partner teachers</h4>
+    <div id="partnerList"></div>
+    <div class="fields-3 partner-add">
+      <div class="field"><label for="newPName">Name</label><input id="newPName" placeholder="e.g. Kata"></div>
+      <div class="field"><label for="newPEmail">Login email</label><input id="newPEmail" type="email" placeholder="kata@example.com"></div>
+      <div class="field"><label for="newPComm">Commission %</label><input id="newPComm" type="number" min="0" max="100" value="30"></div>
+    </div>
+    <div class="modal-foot"><button type="button" class="btn btn-outline" data-action="add-partner"><svg class="i"><use href="#i-plus"/></svg>Add partner</button></div>
+    <div class="note-box steps"><b>Then create her login (once):</b> Supabase → <b>Authentication</b> → <b>Users</b> → <b>Add user</b> → <b>Create new user</b>. Type the same email and a password, tick <b>Auto Confirm User</b>, and click Create. She logs in on the same Learning Hub address with that email and password, and can change the password with “Forgot password”.</div>
   </div>
 </div>
 
@@ -1129,8 +1325,8 @@ const SUPABASE_ANON_KEY = 'sb_publishable_0yLz6cSdEZe4Pe7y9GKxUA_fAcsvmrO';
 /* ================= configuration ================= */
 const OLD_STORE_KEY = 'englishkola_hub_data';     // the offline version's browser storage
 const SETTINGS_KEY  = 'learninghub_settings';
-const LEVELS = ['Junior','A2','B1','B2','C1','Exams','Summer Camp','Baking with Alice','Professional English'];
-const MAIN_LEVELS = 5;
+const LEVELS = ['Mini','Junior','A2','B1','B2','C1','Exams','Summer Camp','Baking with Alice','Professional English'];
+const MAIN_LEVELS = 6;
 const EXAMS  = ['Érettségi','CAE'];
 const EXAM_NOTE = {'Érettségi':'Hungarian school-leaving','CAE':'C1 Advanced'};
 const SKILLS = {
@@ -1175,7 +1371,7 @@ const PRO_SECTIONS = ['eng:interview','eng:bim','eng:bimrev','presentation','hr'
 const EXT_SECTIONS = ['ext:speaking','ext:vocabulary','ext:grammar','ext:listening','ext:reading','ext:writing','ext:culture','ext:tests','ext:pdf','ext:video','ext:ted','ext:tedvocab'];
 const NO_SKILL = {'Summer Camp':'🏕️','Baking with Alice':'🧁'};
 const COURSES = ['Summer Camp','Baking with Alice','Professional English'];
-const HUB_EMOJI = {'Junior':'🧒','A2':'🌱','B1':'🌿','B2':'🌳','C1':'🏔️','Érettségi':'📜','CAE':'🏅','Summer Camp':'🏕️','Baking with Alice':'🧁','Professional English':'💼'};
+const HUB_EMOJI = {'Mini':'🐣','Junior':'🧒','A2':'🌱','B1':'🌿','B2':'🌳','C1':'🏔️','Érettségi':'📜','CAE':'🏅','Summer Camp':'🏕️','Baking with Alice':'🧁','Professional English':'💼'};
 const BUNDLE_MONTHS = 3;
 const MAX_FILE_MB = 15;
 const ALL_SKILLS = [...OWN_SKILLS, ...PRO_SECTIONS, ...EXT_SECTIONS, 'general'];
@@ -1487,7 +1683,7 @@ async function q(promise, failMsg){
   if (error){ console.error(error); toast((failMsg || 'Could not save') + ': ' + error.message); throw error; }
   return d;
 }
-const linkRow = l => ({id:l.id, title:l.title, url:l.url, category:l.category, exam:l.category==='Exams' ? (l.exam||null) : null, subcategory:l.subcategory||'general', notes:l.notes||'', image_url:l.image||null});
+const linkRow = l => ({id:l.id, title:l.title, url:l.url, category:l.category, exam:l.category==='Exams' ? (l.exam||null) : null, subcategory:l.subcategory||'general', notes:l.notes||'', image_url:l.image||null, ...(l.owner ? {owner:l.owner} : {})});
 const bundleRow = p => ({id:p.id, title:p.title, start_date:p.start, months:p.months||BUNDLE_MONTHS, notes:p.notes||'', link_ids:p.linkIds||[]});
 const studentRow = s => ({id:s.id, name:s.name, email:s.email||'', notes:s.notes||'', ...(s.token ? {token:s.token} : {})});
 
@@ -1502,9 +1698,10 @@ async function loadAll(){
   ]);
   /* deleted links are kept as hidden markers, so a restore file or the built-in list never brings them back */
   data.deletedRows = links.filter(l=>isTomb(l.category));
-  data.links = links.filter(l=>!isTomb(l.category)).map(l=>({id:l.id, title:l.title, url:l.url, category:l.category, exam:l.exam||undefined, subcategory:l.subcategory, notes:l.notes, image:l.image_url||''}));
+  data.links = links.filter(l=>!isTomb(l.category)).map(l=>({id:l.id, title:l.title, url:l.url, category:l.category, exam:l.exam||undefined, subcategory:l.subcategory, notes:l.notes, image:l.image_url||'', owner:l.owner||null}));
+  data.allLinks = data.links;
   data.packages = bundles.map(b=>({id:b.id, title:b.title, start:b.start_date, months:b.months, notes:b.notes, linkIds:b.link_ids||[]}));
-  data.students = students.map(s=>({id:s.id, name:s.name, email:s.email, notes:s.notes, token:s.token,
+  data.students = students.map(s=>({id:s.id, name:s.name, email:s.email, notes:s.notes, token:s.token, owner:s.owner||null, shared:!!s.shared,
     hubs: mems.filter(m=>m.student_id===s.id).sort((a,b)=>String(a.joined).localeCompare(b.joined)).map(m=>({id:m.hub_id, date:m.joined}))}));
   data.progress = progress;
   data.submissions = subs;
@@ -1522,9 +1719,445 @@ async function loadAll(){
   data.students.forEach(s=>{ const r = extra[s.id]||{}; Object.assign(s, {purpose:r.purpose||'', interests:r.interests||'', examName:r.exam_name||'', examLevel:r.exam_level||'', examDate:r.exam_date||''}); });
   const bmap = Object.fromEntries(bundles.map(b=>[b.id, b]));
   data.packages.forEach(p=>{ p.followedUp = !!(bmap[p.id]||{}).followed_up; });
+  await loadPartnerData();
   updateCounts();
 }
 let schemaV3 = false;
+/* ================= corrections: show the teacher's changes word by word =================
+   red & struck through = removed by the teacher, green = added by the teacher */
+function diffHTML(a, b){
+  a = String(a ?? ''); b = String(b ?? '');
+  if (a === b) return esc(b);
+  const tok = t => t.match(/\s+|[\p{L}\p{N}'’-]+|[^\s]/gu) || [];
+  const key = t => /^\s+$/.test(t) ? (t.includes('\n') ? '\n' : ' ') : t;
+  const A = tok(a), B = tok(b), n = A.length, m = B.length;
+  if (n * m > 6e6) return esc(b);                                   /* very long texts: just show the corrected version */
+  const W = m + 1, L = new Uint32Array((n + 1) * W);
+  for (let i = n - 1; i >= 0; i--) for (let j = m - 1; j >= 0; j--)
+    L[i*W + j] = key(A[i]) === key(B[j]) ? L[(i+1)*W + j+1] + 1 : Math.max(L[(i+1)*W + j], L[i*W + j+1]);
+  const out = []; let i = 0, j = 0;
+  const push = (type, t) => { const last = out[out.length-1]; if (last && last.type === type) last.t += t; else out.push({type, t}); };
+  while (i < n && j < m){
+    if (key(A[i]) === key(B[j])){ push('=', B[j]); i++; j++; }
+    else if (L[(i+1)*W + j] >= L[i*W + j+1]) push('-', A[i++]);
+    else push('+', B[j++]);
+  }
+  while (i < n) push('-', A[i++]);
+  while (j < m) push('+', B[j++]);
+  /* a change that is only spaces is not worth showing */
+  return out.map(x => x.type === '=' ? esc(x.t)
+    : /^\s+$/.test(x.t) ? (x.type === '+' ? esc(x.t) : '')
+    : x.type === '-' ? `<del class="cx-del">${esc(x.t)}</del>` : `<ins class="cx-ins">${esc(x.t)}</ins>`).join('');
+}
+const diffLegend = () => `<p class="cx-legend"><del class="cx-del">removed</del> <ins class="cx-ins">added</ins></p>`;
+
+/* ================= partner teacher, sales tracker, notes & product sheets =================
+   Needs learning-hub-partner-setup.sql. Without it, everything here stays switched off. */
+let ROLE = 'owner', ME = null, ME_ROW = null, partnerReady = false, PARTNERS = [];
+const HUB_DEFAULTS = {prices:{bundle:26000, baking:4000, pro:28000}, collects:'partner', owner_name:'Barbara',
+  demo_url:'https://barbaralangszabo-collab.github.io/Learning-Hub-Reference/'};
+let HUBSET = JSON.parse(JSON.stringify(HUB_DEFAULTS));
+data.sales = []; data.notes = [];
+
+async function loadPartnerData(){
+  data.sales = []; data.notes = [];
+  if (!partnerReady) return;
+  const [sales, notes, sets, partners] = await Promise.all([
+    sb.from('hub_sales').select('*').order('sale_date', {ascending:false}).order('created_at', {ascending:false}),
+    sb.from('hub_notes').select('*').order('note_date', {ascending:false}).order('created_at', {ascending:false}),
+    sb.from('hub_settings').select('*'),
+    sb.from('hub_partners').select('*').order('created_at')
+  ]);
+  data.sales = sales.data || []; data.notes = notes.data || [];
+  HUBSET = JSON.parse(JSON.stringify(HUB_DEFAULTS));
+  (sets.data || []).forEach(r=>{ HUBSET[r.key] = r.key==='prices' ? {...HUB_DEFAULTS.prices, ...(r.value||{})} : r.value; });
+  PARTNERS = partners.data || [];
+  if (ROLE==='partner'){ ME_ROW = PARTNERS[0] || null; ME = ME_ROW ? ME_ROW.email : null; }
+  if (ROLE==='owner'){
+    /* you see your own students and the mutual ones; a partner's private students stay out of your lists */
+    const vis = new Set(data.students.filter(s=>!s.owner || s.shared).map(s=>s.id));
+    data.students = data.students.filter(s=>vis.has(s.id));
+    data.progress = data.progress.filter(p=>vis.has(p.student_id));
+    data.submissions = data.submissions.filter(x=>vis.has(x.student_id));
+    data.notes = data.notes.filter(n=>vis.has(n.student_id));
+    data.links = data.allLinks.filter(l=>!l.owner);          /* her own links never appear in your library */
+  }
+  const t = document.querySelector('.brand .tagline');
+  if (t && ROLE==='partner') t.textContent = `Partner teacher · ${ME_ROW ? ME_ROW.name : ''}`;
+  if ($('tab-sales')) $('tab-sales').hidden = false;
+}
+
+/* ---------- who is who ---------- */
+const ownerName = () => HUBSET.owner_name || 'Barbara';
+const partnerNames = () => PARTNERS.map(p=>p.name).join(' / ') || 'your partner teacher';
+const partnerOf = email => PARTNERS.find(p=>p.email===email);
+const authorName = (a, fallback) => a==='owner' ? ownerName() : ((partnerOf(a)||{}).name || fallback || a || '');
+const sellerName = r => r.seller==='owner' ? ownerName() : (r.seller_name || authorName(r.seller));
+const ownsStudent = s => !partnerReady ? true : (ROLE==='owner' ? !s.owner : s.owner===ME);
+const canShare = s => ownsStudent(s);
+const canEditLink = l => ROLE==='owner' || (l.owner && l.owner===ME);
+const notesOf = sid => (data.notes||[]).filter(n=>n.student_id===sid);
+function whoBadge(s){
+  if (!partnerReady || !s.shared) return '';
+  const other = ROLE==='owner' ? (s.owner ? `${authorName(s.owner)}'s student` : `shared with ${partnerNames()}`)
+                               : (s.owner===ME ? `shared with ${ownerName()}` : `${ownerName()}'s student`);
+  return `<span class="who-badge" title="Mutual student">🤝 Mutual · ${esc(other)}</span>`;
+}
+function lastNoteHTML(s){
+  const n = notesOf(s.id)[0]; if (!n) return '';
+  const body = n.body.length > 110 ? n.body.slice(0,110) + '…' : n.body;
+  return `<p class="last-note"><span>${NOTE_KIND[n.kind]?.emoji||'💬'} ${esc(fmtDate(n.note_date))} · ${esc(authorName(n.author, n.author_name))}</span>${esc(body)}</p>`;
+}
+const fmtFt = (n, en) => en ? Number(n||0).toLocaleString('en-GB') + ' HUF' : Number(n||0).toLocaleString('hu-HU').replace(/ /g,' ') + ' Ft';
+
+/* ---------- student page: homework ---------- */
+function stHomeworkHTML(){
+  const hw = (st.portal && st.portal.homework) || [];
+  const open = hw.filter(h=>!h.done), done = hw.filter(h=>h.done).slice(0, 3);
+  if (!open.length && !done.length) return '';
+  const item = h => `<li class="${h.done?'done':''}"><span class="d">${esc(fmtDate(h.date))}</span><span class="b">${esc(h.body)}</span>${h.done?'<span class="ok">✓ done</span>':''}</li>`;
+  return `<section class="st-homework"><h3>📚 Homework</h3><ul>${open.map(item).join('')}${done.map(item).join('')}</ul></section>`;
+}
+
+/* ---------- products ---------- */
+function products(){
+  const P = HUBSET.prices || HUB_DEFAULTS.prices, out = [];
+  data.packages.forEach(p=>out.push({key:'bundle:'+p.id, type:'bundle', title:p.title, price:P.bundle, access:p.id, months:p.months||BUNDLE_MONTHS, start:p.start, links:linksOf(p)}));
+  const pro = findHub('lvl:Professional English');
+  if (pro) out.push({key:'pro', type:'pro', title:'Professional English', price:P.pro, access:pro.id, links:hubLinks(pro)});
+  data.links.filter(l=>!l.owner && l.category==='Baking with Alice').forEach(l=>out.push({key:'baking:'+l.id, type:'baking', title:l.title, price:P.baking, access:'x:'+l.id, links:[l]}));
+  return out;
+}
+const PRODUCT_LABEL = {bundle:'3-month bundle', pro:'Professional English', baking:'Baking with Alice project', other:'Other'};
+const NOTE_KIND = {class:{emoji:'🗒️', label:'Class notes'}, homework:{emoji:'📚', label:'Homework'}, note:{emoji:'💬', label:'Note for each other'}};
+
+/* ================= record a sale ================= */
+function openSale(sid){
+  const stds = [...data.students].sort((a,b)=>a.name.localeCompare(b.name,'hu'));
+  if (!stds.length){ toast('Add a student first'); return; }
+  $('saleStudent').innerHTML = stds.map(s=>`<option value="${esc(s.id)}" ${s.id===sid?'selected':''}>${esc(s.name)}</option>`).join('');
+  const ps = products(), grp = (t, label) => { const xs = ps.filter(p=>p.type===t); return xs.length ? `<optgroup label="${esc(label)}">${xs.map(p=>`<option value="${esc(p.key)}">${esc(p.title)} – ${esc(fmtFt(p.price))}</option>`).join('')}</optgroup>` : ''; };
+  $('saleProduct').innerHTML = grp('bundle','3-month bundles') + grp('pro','Professional English') + grp('baking','Baking with Alice projects') + `<optgroup label="Other"><option value="other">Something else (type it in)</option></optgroup>`;
+  $('saleSellerWrap').hidden = ROLE!=='owner' || !PARTNERS.length;
+  $('saleSeller').innerHTML = `<option value="owner">${esc(ownerName())} (me)</option>` + PARTNERS.map(p=>`<option value="${esc(p.email)}">${esc(p.name)} (${Math.round(p.commission*100)}% commission)</option>`).join('');
+  $('saleDate').value = today(); $('salePaid').checked = false; $('saleGive').checked = true; $('saleNote').value = ''; $('saleOther').value = '';
+  saleProductChanged();
+  openModal('mSale');
+}
+function saleProductChanged(){
+  const key = $('saleProduct').value, p = products().find(x=>x.key===key);
+  $('saleOtherWrap').hidden = key!=='other';
+  $('salePrice').value = p ? p.price : '';
+  $('saleGiveWrap').hidden = !p;
+  updateSaleCommission();
+}
+function updateSaleCommission(){
+  const price = Number($('salePrice').value)||0;
+  const rate = ROLE==='partner' ? (ME_ROW ? Number(ME_ROW.commission) : 0) : ($('saleSeller').value==='owner' ? 0 : Number((partnerOf($('saleSeller').value)||{}).commission||0));
+  $('saleComm').textContent = rate ? `Commission (${Math.round(rate*100)}%): ${fmtFt(Math.round(price*rate))}` : '';
+}
+async function saveSale(e){
+  e.preventDefault();
+  const s = data.students.find(x=>x.id===$('saleStudent').value); if (!s) return;
+  const key = $('saleProduct').value, p = products().find(x=>x.key===key);
+  const title = p ? p.title : $('saleOther').value.trim();
+  if (!title){ toast('Type what was sold'); return; }
+  const seller = ROLE==='partner' ? ME : $('saleSeller').value;
+  const sp = seller==='owner' ? null : partnerOf(seller);
+  const row = {id:uid('sale'), seller, seller_name: sp ? sp.name : ownerName(), student_id:s.id, student_name:s.name,
+    product: p ? p.type : 'other', item_id: p ? p.key : null, item_title:title, price: Math.round(Number($('salePrice').value)||0),
+    commission_rate: sp ? Number(sp.commission) : 0, sale_date: $('saleDate').value || today(), student_paid: $('salePaid').checked, note: $('saleNote').value.trim()};
+  busy(e.submitter, true);
+  try {
+    const saved = await q(sb.from('hub_sales').insert(row).select().single(), 'Could not save the sale');
+    data.sales.unshift(saved || row);
+    if (p && p.access && $('saleGive').checked){
+      await q(sb.from('memberships').upsert({student_id:s.id, hub_id:p.access, joined:today()}, {onConflict:'student_id,hub_id', ignoreDuplicates:true}));
+      if (!(s.hubs||[]).some(m=>m.id===p.access)) (s.hubs = s.hubs||[]).push({id:p.access, date:today()});
+      if (p.access.startsWith('x:') && hiddenIds(s).includes(p.access.slice(2))){
+        await q(sb.from('memberships').delete().eq('student_id', s.id).eq('hub_id', 'h:'+p.access.slice(2)));
+        s.hubs = s.hubs.filter(m=>m.id!=='h:'+p.access.slice(2));
+      }
+    }
+  } catch(err){ busy(e.submitter, false); return; }
+  busy(e.submitter, false); closeAll(); rerender();
+  toast(p && $('saleGive').checked ? `Sale saved — ${firstName(s.name)} can open it now` : 'Sale saved');
+}
+
+/* ================= sales summary ================= */
+let salesPeriod = (()=>{ const d = new Date(); return {mode:'month', y:d.getFullYear(), m:d.getMonth()}; })(), salesSeller = 'ALL';
+function periodRange(){
+  const {mode, y, m} = salesPeriod, m0 = mode==='quarter' ? Math.floor(m/3)*3 : m, len = mode==='quarter' ? 3 : 1;
+  const from = new Date(y, m0, 1), to = new Date(y, m0+len, 1);
+  const lbl = mode==='quarter'
+    ? `Q${m0/3+1} ${y} (${from.toLocaleDateString('en-GB',{month:'short'})}–${new Date(y, m0+2, 1).toLocaleDateString('en-GB',{month:'short'})})`
+    : from.toLocaleDateString('en-GB', {month:'long', year:'numeric'});
+  return {from:isoOf(from), to:isoOf(to), label:lbl};
+}
+function shiftPeriod(dir){ const step = salesPeriod.mode==='quarter' ? 3 : 1; const d = new Date(salesPeriod.y, salesPeriod.m + dir*step, 1); salesPeriod.y = d.getFullYear(); salesPeriod.m = d.getMonth(); renderSales(); }
+function salesRows(){
+  const r = periodRange();
+  return data.sales.filter(x=>String(x.sale_date) >= r.from && String(x.sale_date) < r.to)
+    .filter(x=>ROLE!=='owner' || salesSeller==='ALL' || x.seller===salesSeller);
+}
+const commOf = x => Math.round((Number(x.price)||0) * (Number(x.commission_rate)||0));
+function renderSales(){
+  const box = $('salesBody'); if (!box) return;
+  if (!partnerReady){ box.innerHTML = `<p class="warn">To use sales, notes and the partner login, run <b>learning-hub-partner-setup.sql</b> once in Supabase (SQL Editor → New query → paste → Run), then reload this page.</p>`; return; }
+  const r = periodRange(), rows = salesRows();
+  const total = rows.reduce((a,x)=>a+(Number(x.price)||0), 0), comm = rows.reduce((a,x)=>a+commOf(x), 0);
+  const pRows = rows.filter(x=>x.seller!=='owner'), open = pRows.filter(x=>!x.settled);
+  const collects = HUBSET.collects==='owner' ? 'owner' : 'partner';
+  const openAmt = open.reduce((a,x)=>a + (collects==='partner' ? (Number(x.price)||0) - commOf(x) : commOf(x)), 0);
+  const isP = ROLE==='partner', pName = isP ? (ME_ROW ? ME_ROW.name : 'You') : partnerNames();
+  const balance = !pRows.length ? 'Nothing to settle in this period.' : collects==='partner'
+    ? `${esc(pName)} collects the payments and transfers ${esc(ownerName())}'s share: <b>${esc(fmtFt(openAmt))}</b> still to transfer.`
+    : `${esc(ownerName())} collects the payments and pays the commission: <b>${esc(fmtFt(openAmt))}</b> still to pay ${isP ? 'you' : esc(pName)}.`;
+  const showSeller = !isP && salesSeller==='ALL' && PARTNERS.length;
+  $('salesTools').innerHTML = `<div class="seg" role="group" aria-label="Period">
+      <button type="button" data-sales="mode" data-mode="month" aria-pressed="${salesPeriod.mode==='month'}">Month</button>
+      <button type="button" data-sales="mode" data-mode="quarter" aria-pressed="${salesPeriod.mode==='quarter'}">3 months</button></div>
+    <div class="period"><button type="button" class="btn-icon" data-sales="prev" aria-label="Previous period">‹</button><b>${esc(r.label)}</b><button type="button" class="btn-icon" data-sales="next" aria-label="Next period">›</button></div>
+    ${!isP && PARTNERS.length ? `<select id="salesSellerSel" aria-label="Whose sales">
+      <option value="ALL" ${salesSeller==='ALL'?'selected':''}>All sales</option>
+      ${PARTNERS.map(p=>`<option value="${esc(p.email)}" ${salesSeller===p.email?'selected':''}>${esc(p.name)}'s sales</option>`).join('')}
+      <option value="owner" ${salesSeller==='owner'?'selected':''}>My own sales</option></select>` : ''}`;
+  const cards = isP
+    ? [['Your sales', fmtFt(total), plural(rows.length,'sale')], [`Your commission`, fmtFt(comm), `${Math.round((ME_ROW?Number(ME_ROW.commission):0)*100)}% of each sale`], [`${ownerName()}'s share`, fmtFt(total-comm), ''], ['Paid by students', `${rows.filter(x=>x.student_paid).length} / ${rows.length}`, '']]
+    : [['Sales', fmtFt(total), plural(rows.length,'sale')], ['Partner commission', fmtFt(comm), pRows.length ? plural(pRows.length,'partner sale') : ''], ['Your share', fmtFt(total-comm), ''], ['Paid by students', `${rows.filter(x=>x.student_paid).length} / ${rows.length}`, '']];
+  box.innerHTML = `<div class="sum-cards">${cards.map(c=>`<div class="sum-card"><span>${esc(c[0])}</span><b>${esc(c[1])}</b>${c[2]?`<small>${esc(c[2])}</small>`:''}</div>`).join('')}</div>
+    <p class="note-box balance">${balance}</p>
+    ${rows.length ? `<div class="table-wrap"><table class="sales">
+      <thead><tr><th>Date</th><th>Student</th><th>Product</th>${showSeller?'<th>Sold by</th>':''}<th class="num">Price</th><th class="num">Commission</th><th>Student paid</th><th>Settled</th><th></th></tr></thead>
+      <tbody>${rows.map(x=>`<tr>
+        <td>${esc(fmtDate(x.sale_date))}</td><td>${esc(x.student_name)}</td>
+        <td>${esc(x.item_title)}<small>${esc([PRODUCT_LABEL[x.product]!==x.item_title ? PRODUCT_LABEL[x.product] : '', x.note].filter(Boolean).join(' · '))}</small></td>
+        ${showSeller?`<td>${esc(sellerName(x))}</td>`:''}
+        <td class="num">${esc(fmtFt(x.price))}</td><td class="num">${commOf(x) ? esc(fmtFt(commOf(x))) : '–'}</td>
+        <td><label class="tick"><input type="checkbox" data-sale-paid="${esc(x.id)}" ${x.student_paid?'checked':''}><span class="sr">Paid by student</span></label></td>
+        <td>${x.seller==='owner' ? '–' : (isP ? (x.settled ? '✓' : 'open') : `<label class="tick"><input type="checkbox" data-sale-settled="${esc(x.id)}" ${x.settled?'checked':''}><span class="sr">Commission settled</span></label>`)}</td>
+        <td>${(!isP || !x.settled) ? `<button type="button" class="btn-icon del" data-sales="del" data-id="${esc(x.id)}" aria-label="Delete sale" title="Delete">${icon('trash')}</button>` : ''}</td></tr>`).join('')}</tbody>
+      <tfoot><tr><td colspan="${showSeller?4:3}">Total</td><td class="num">${esc(fmtFt(total))}</td><td class="num">${esc(fmtFt(comm))}</td><td colspan="3"></td></tr></tfoot>
+    </table></div>` : `<div class="empty"><h3>No sales in ${esc(r.label)}</h3><p>Record a sale from a student's card, or with the button above.</p></div>`}
+    <h3 class="section-title">Product sheets</h3>
+    <p class="hint">A short, ready-to-send description of each product, in Hungarian or English. Copy it into an email or Messenger, or save it as a PDF.</p>
+    <div class="prod-grid">${products().map(p=>`<article class="panel prod">
+      <h4>${esc(p.title)}</h4><span class="meta">${esc(PRODUCT_LABEL[p.type])} · ${esc(fmtFt(p.price))}${p.links.length>1?' · '+plural(p.links.length,'app'):''}</span>
+      <button type="button" class="btn btn-outline btn-sm" data-sales="sheet" data-key="${esc(p.key)}">📄 Product sheet</button></article>`).join('') || '<p class="hint">Create a 3-month bundle first.</p>'}</div>`;
+}
+async function setSaleFlag(id, field, on, input){
+  const x = data.sales.find(y=>y.id===id); if (!x) return;
+  try { await q(sb.from('hub_sales').update({[field]:on}).eq('id', id)); x[field] = on; renderSales(); }
+  catch(e){ input.checked = !on; }
+}
+async function deleteSale(id){
+  const x = data.sales.find(y=>y.id===id); if (!x || !confirm(`Delete the sale "${x.item_title}" to ${x.student_name}? (The student keeps access.)`)) return;
+  try { await q(sb.from('hub_sales').delete().eq('id', id)); } catch(e){ return; }
+  data.sales = data.sales.filter(y=>y.id!==id); renderSales(); toast('Sale deleted');
+}
+function exportSales(){
+  const r = periodRange(), rows = salesRows();
+  const cell = v => `"${String(v??'').replace(/"/g,'""')}"`;
+  const lines = [['Date','Student','Product','Type','Sold by','Price (HUF)','Commission rate','Commission (HUF)','Student paid','Settled','Note'].map(cell).join(';')]
+    .concat(rows.map(x=>[x.sale_date, x.student_name, x.item_title, PRODUCT_LABEL[x.product]||x.product, sellerName(x), x.price, Math.round((Number(x.commission_rate)||0)*100)+'%', commOf(x), x.student_paid?'yes':'no', x.seller==='owner'?'':(x.settled?'yes':'no'), x.note||''].map(cell).join(';')));
+  const blob = new Blob(['﻿' + lines.join('\r\n')], {type:'text/csv;charset=utf-8'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `sales-${r.from.slice(0,7)}${salesPeriod.mode==='quarter'?'-3months':''}.csv`; a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 2000);
+}
+
+/* ================= settings & partners (you only) ================= */
+function openSalesSettings(){
+  const P = HUBSET.prices || HUB_DEFAULTS.prices;
+  $('setOwnerName').value = ownerName();
+  $('setPBundle').value = P.bundle; $('setPBaking').value = P.baking; $('setPPro').value = P.pro;
+  $('setCollects').value = HUBSET.collects==='owner' ? 'owner' : 'partner';
+  $('setDemo').value = HUBSET.demo_url || HUB_DEFAULTS.demo_url;
+  renderPartnerList();
+  openModal('mSalesSet');
+}
+function renderPartnerList(){
+  $('partnerList').innerHTML = PARTNERS.length ? PARTNERS.map(p=>`<div class="partner-row"><span><b>${esc(p.name)}</b> · ${esc(p.email)} · ${Math.round(p.commission*100)}%</span>
+    <button type="button" class="btn-icon del" data-sales="del-partner" data-id="${esc(p.email)}" aria-label="Remove ${esc(p.name)}" title="Remove">${icon('trash')}</button></div>`).join('')
+    : '<p class="hint">No partner teacher yet.</p>';
+}
+async function saveSalesSettings(e){
+  e.preventDefault();
+  const prices = {bundle:Math.round(Number($('setPBundle').value)||0), baking:Math.round(Number($('setPBaking').value)||0), pro:Math.round(Number($('setPPro').value)||0)};
+  const rows = [{key:'prices', value:prices}, {key:'collects', value:$('setCollects').value}, {key:'demo_url', value:$('setDemo').value.trim()}, {key:'owner_name', value:$('setOwnerName').value.trim() || 'Barbara'}];
+  busy(e.submitter, true);
+  try { await q(sb.from('hub_settings').upsert(rows)); } catch(err){ busy(e.submitter, false); return; }
+  rows.forEach(r=>HUBSET[r.key] = r.value);
+  busy(e.submitter, false); closeAll(); renderSales(); toast('Settings saved');
+}
+async function addPartner(){
+  const name = $('newPName').value.trim(), email = $('newPEmail').value.trim().toLowerCase(), pc = Number($('newPComm').value);
+  if (!name || !/\S+@\S+\.\S+/.test(email)){ toast('Type her name and email'); return; }
+  const row = {email, name, commission: (isNaN(pc) ? 30 : pc) / 100};
+  try { await q(sb.from('hub_partners').upsert(row)); } catch(e){ return; }
+  PARTNERS = PARTNERS.filter(p=>p.email!==email).concat(row);
+  $('newPName').value = ''; $('newPEmail').value = ''; renderPartnerList();
+  toast(`${name} added — now create her login in Supabase (see the steps below)`);
+}
+async function removePartner(email){
+  const p = partnerOf(email); if (!p || !confirm(`Remove ${p.name}? She can no longer log in to the hub. Her students and sales stay in the database.`)) return;
+  try { await q(sb.from('hub_partners').delete().eq('email', email)); } catch(e){ return; }
+  PARTNERS = PARTNERS.filter(x=>x.email!==email); renderPartnerList();
+}
+
+/* ================= notes, class notes & homework ================= */
+let notesStudent = null, notesFilter = 'all';
+function openNotes(sid){
+  notesStudent = sid; notesFilter = 'all';
+  const s = data.students.find(x=>x.id===sid); if (!s) return;
+  $('mNotesTitle').textContent = 'Notes – ' + s.name;
+  $('noteKind').value = 'class'; $('noteDate').value = today(); $('noteBody').value = ''; $('noteForStudent').checked = true;
+  noteKindChanged(); renderNotes(); openModal('mNotes');
+}
+function noteKindChanged(){ $('noteForStudentWrap').hidden = $('noteKind').value!=='homework'; }
+function renderNotes(){
+  const all = notesOf(notesStudent), list = notesFilter==='all' ? all : all.filter(n=>n.kind===notesFilter);
+  $('notesFilter').innerHTML = [['all','All'], ...Object.entries(NOTE_KIND).map(([k,v])=>[k, v.emoji+' '+v.label])]
+    .map(([k,l])=>`<button type="button" data-notes="filter" data-k="${k}" aria-pressed="${notesFilter===k}">${esc(l)} <small>${k==='all'?all.length:all.filter(n=>n.kind===k).length}</small></button>`).join('');
+  $('notesList').innerHTML = list.length ? list.map(n=>{
+    const mine = ROLE==='owner' || n.author===ME;
+    return `<article class="note-item k-${esc(n.kind)}${n.kind==='homework' && n.done ? ' done' : ''}">
+      <div class="nh"><span class="nk">${NOTE_KIND[n.kind]?.emoji||'💬'} ${esc(NOTE_KIND[n.kind]?.label||'Note')}</span><span class="nm">${esc(fmtDate(n.note_date))} · ${esc(authorName(n.author, n.author_name))}</span>
+        ${n.kind==='homework' ? `<label class="tick"><input type="checkbox" data-note-done="${esc(n.id)}" ${n.done?'checked':''}> Done</label>` : ''}
+        ${mine ? `<button type="button" class="btn-icon del" data-notes="del" data-id="${esc(n.id)}" aria-label="Delete note" title="Delete">${icon('trash')}</button>` : ''}</div>
+      <p class="nb">${esc(n.body)}</p>
+      ${n.kind==='homework' && n.for_student ? '<span class="tag">👁 on the student\'s page</span>' : ''}</article>`; }).join('')
+    : `<p class="hint">Nothing here yet. Write what you did in class, set homework, or leave a note for each other.</p>`;
+}
+async function saveNote(e){
+  e.preventDefault();
+  const body = $('noteBody').value.trim(); if (!body){ toast('Write the note first'); return; }
+  const kind = $('noteKind').value;
+  const row = {id:uid('note'), student_id:notesStudent, kind, body, note_date:$('noteDate').value || today(),
+    for_student: kind==='homework' && $('noteForStudent').checked, author_name: ROLE==='owner' ? ownerName() : (ME_ROW ? ME_ROW.name : '')};
+  busy(e.submitter, true);
+  try { const saved = await q(sb.from('hub_notes').insert(row).select().single(), 'Could not save the note'); data.notes.unshift(saved || row); }
+  catch(err){ busy(e.submitter, false); return; }
+  busy(e.submitter, false);
+  data.notes.sort((a,b)=>String(b.note_date).localeCompare(String(a.note_date)) || String(b.created_at||'').localeCompare(String(a.created_at||'')));
+  $('noteBody').value = ''; renderNotes(); toast(row.for_student ? 'Homework saved — it is on the student\'s page now' : 'Note saved');
+}
+async function setNoteDone(id, on, input){
+  const n = data.notes.find(x=>x.id===id); if (!n) return;
+  try { await q(sb.from('hub_notes').update({done:on}).eq('id', id)); n.done = on; renderNotes(); } catch(e){ input.checked = !on; }
+}
+async function deleteNote(id){
+  if (!confirm('Delete this note?')) return;
+  try { await q(sb.from('hub_notes').delete().eq('id', id)); } catch(e){ return; }
+  data.notes = data.notes.filter(n=>n.id!==id); renderNotes();
+}
+
+/* ================= product sheet ================= */
+let sheetKey = null, sheetLang = 'hu';
+const SHEET_TXT = {
+  hu:{sub:{bundle:'3 hónapos, személyre szabott angol csomag', pro:'Szakmai angol tananyagcsomag', baking:'Baking with Alice – angol nyelvű sütős projekt', other:''},
+      per:{bundle:' / 3 hónap', pro:'', baking:'', other:''}, what:'Mit tartalmaz?', more:n=>`és még ${n} további alkalmazás`,
+      how:'Így működik', bullets:['Saját, személyes link – jelszó nélkül, telefonon és számítógépen is','Minden anyag egy helyen, a szintedhez és a céljaidhoz igazítva','Haladásjelzés: mindig látod, mit végeztél már el','Fogalmazások beadása és javított visszaküldése a saját mappádban'],
+      demo:'Nézd meg a demót:', contact:'Jelentkezés és kérdések:', price:'Ár'},
+  en:{sub:{bundle:'Tailored 3-month English bundle', pro:'Professional English course material', baking:'Baking with Alice – an English baking project', other:''},
+      per:{bundle:' / 3 months', pro:'', baking:'', other:''}, what:"What's included", more:n=>`and ${n} more apps`,
+      how:'How it works', bullets:['Your own personal link – no password, on your phone and computer','All your material in one place, matched to your level and goals','Progress tracking: always see what you have completed','Hand in compositions and get them back corrected in your own folder'],
+      demo:'Try the demo:', contact:'Sign up and questions:', price:'Price'}};
+function sheetContact(){
+  try { const c = localStorage.getItem('lh-sheet-contact'); if (c) return c; } catch(e){}
+  return ROLE==='partner' && ME_ROW ? `${ME_ROW.name} · ${ME_ROW.email}` : ownerName();
+}
+function sheetData(){
+  const p = products().find(x=>x.key===sheetKey); if (!p) return null;
+  const T = SHEET_TXT[sheetLang], en = sheetLang==='en';
+  const titles = p.links.map(l=>l.title), shown = titles.slice(0, 10);
+  return {p, T, en, shown, more: titles.length - shown.length, price: fmtFt(p.price, en) + T.per[p.type],
+    demo: HUBSET.demo_url || HUB_DEFAULTS.demo_url, contact: $('sheetContact').value.trim()};
+}
+function sheetText(){
+  const d = sheetData(); if (!d) return '';
+  return [`${d.p.title}`, `Piece of Cake Learning Hub – ${d.T.sub[d.p.type]}`, '', `${d.T.price}: ${d.price}`, '',
+    `${d.T.what}`, ...d.shown.map(t=>`• ${t}`), ...(d.more>0 ? [`• ${d.T.more(d.more)}`] : []), '',
+    `${d.T.how}`, ...d.T.bullets.map(b=>`• ${b}`), '', `${d.T.demo} ${d.demo}`, ...(d.contact ? ['', `${d.T.contact} ${d.contact}`] : [])].join('\n');
+}
+function sheetHTML(){
+  const d = sheetData(); if (!d) return '';
+  return `<div class="sheet">
+    <div class="sheet-top"><span class="k">PIECE OF CAKE · LEARNING HUB</span><h2>${esc(d.p.title)}</h2><p class="s">${esc(d.T.sub[d.p.type])}</p>
+      <p class="pr">${esc(d.price)}</p></div>
+    <div class="sheet-cols"><div><h3>${esc(d.T.what)}</h3><ul>${d.shown.map(t=>`<li>${esc(t)}</li>`).join('')}${d.more>0?`<li><em>${esc(d.T.more(d.more))}</em></li>`:''}</ul></div>
+      <div><h3>${esc(d.T.how)}</h3><ul>${d.T.bullets.map(b=>`<li>${esc(b)}</li>`).join('')}</ul></div></div>
+    <p class="demo">${esc(d.T.demo)} <a href="${esc(d.demo)}" target="_blank" rel="noopener">${esc(d.demo)}</a></p>
+    ${d.contact ? `<p class="contact">${esc(d.T.contact)} <b>${esc(d.contact)}</b></p>` : ''}</div>`;
+}
+function openSheet(key){
+  sheetKey = key; $('sheetContact').value = sheetContact(); renderSheet(); openModal('mSheet');
+}
+function renderSheet(){
+  document.querySelectorAll('#mSheet [data-lang]').forEach(b=>b.setAttribute('aria-pressed', b.dataset.lang===sheetLang));
+  $('sheetPreview').innerHTML = sheetHTML();
+}
+function printSheet(){
+  const w = window.open('', '_blank'); if (!w){ toast('Allow pop-ups to save the PDF'); return; }
+  const css = `body{font-family:Georgia,'Times New Roman',serif;color:#2F3A42;margin:0;padding:40px;background:#fff}
+    .sheet{max-width:760px;margin:0 auto}.sheet-top{background:#EEF7F4;border-radius:18px;padding:28px 32px;border-top:8px solid #49E8CC}
+    .k{font:700 12px/1 Arial,sans-serif;letter-spacing:3px;color:#1F5F6D}h2{font-size:34px;margin:10px 0 4px;color:#1F5F6D}
+    .s{font:16px Arial,sans-serif;margin:0}.pr{font:700 26px Arial,sans-serif;margin:14px 0 0}
+    .sheet-cols{display:flex;gap:28px;margin:26px 0}.sheet-cols>div{flex:1}h3{font:700 17px Arial,sans-serif;color:#1F5F6D;margin:0 0 8px}
+    ul{font:15px/1.55 Arial,sans-serif;padding-left:20px;margin:0}.demo,.contact{font:15px Arial,sans-serif}a{color:#1F5F6D}
+    @media print{body{padding:0}}`;
+  w.document.write(`<!doctype html><html lang="${sheetLang}"><head><meta charset="utf-8"><title>${esc(sheetData().p.title)}</title><style>${css}</style></head><body>${sheetHTML()}<script>window.onload=()=>{setTimeout(()=>window.print(),300)}<\/script></body></html>`);
+  w.document.close();
+}
+
+/* ================= events ================= */
+document.addEventListener('click', e=>{
+  const t = e.target.closest('[data-action],[data-sales],[data-notes],[data-lang]'); if (!t) return;
+  const a = t.dataset.action;
+  if (a==='record-sale'){ openSale(t.dataset.id); return; }
+  if (a==='open-notes'){ openNotes(t.dataset.id); return; }
+  if (a==='sales-new'){ openSale(); return; }
+  if (a==='sales-settings'){ openSalesSettings(); return; }
+  if (a==='sales-export'){ exportSales(); return; }
+  if (a==='add-partner'){ addPartner(); return; }
+  if (a==='bundle-date'){ if (ROLE==='owner'){ openBundleModal(data.packages.find(x=>x.id===t.dataset.id)); setTimeout(()=>{ $('pStart').focus(); try { $('pStart').showPicker(); } catch(_){} }, 60); } return; }
+  if (a==='sheet-copy'){ copyText(sheetText(), 'Copied — paste it into an email or Messenger'); return; }
+  if (a==='sheet-print'){ printSheet(); return; }
+  if (a==='sheet-mail'){ location.href = `mailto:?subject=${encodeURIComponent(sheetData().p.title + ' – Piece of Cake Learning Hub')}&body=${encodeURIComponent(sheetText())}`; return; }
+  if (t.dataset.lang){ sheetLang = t.dataset.lang; renderSheet(); return; }
+  const sa = t.dataset.sales;
+  if (sa==='mode'){ salesPeriod.mode = t.dataset.mode; renderSales(); }
+  else if (sa==='prev') shiftPeriod(-1);
+  else if (sa==='next') shiftPeriod(1);
+  else if (sa==='del') deleteSale(t.dataset.id);
+  else if (sa==='sheet') openSheet(t.dataset.key);
+  else if (sa==='del-partner') removePartner(t.dataset.id);
+  const na = t.dataset.notes;
+  if (na==='filter'){ notesFilter = t.dataset.k; renderNotes(); }
+  else if (na==='del') deleteNote(t.dataset.id);
+});
+document.addEventListener('change', e=>{
+  const t = e.target;
+  if (t.id==='salesSellerSel'){ salesSeller = t.value; renderSales(); }
+  else if (t.dataset.salePaid) setSaleFlag(t.dataset.salePaid, 'student_paid', t.checked, t);
+  else if (t.dataset.saleSettled) setSaleFlag(t.dataset.saleSettled, 'settled', t.checked, t);
+  else if (t.dataset.noteDone) setNoteDone(t.dataset.noteDone, t.checked, t);
+  else if (t.id==='saleProduct') saleProductChanged();
+  else if (t.id==='saleSeller') updateSaleCommission();
+  else if (t.id==='noteKind') noteKindChanged();
+  else if (t.id==='sheetContact'){ try { localStorage.setItem('lh-sheet-contact', t.value.trim()); } catch(_){} renderSheet(); }
+});
+document.addEventListener('input', e=>{
+  if (e.target.id==='salePrice') updateSaleCommission();
+  const sid = e.target.dataset && e.target.dataset.diffSrc;
+  if (sid){ const x = data.submissions.find(y=>y.id===sid), box = $('cxp-'+sid);
+    if (x && box){ clearTimeout(box._t); box._t = setTimeout(()=>{ box.innerHTML = diffHTML(x.text_body, e.target.value); }, 250); } }
+});
+document.addEventListener('submit', e=>{
+  if (e.target.id==='saleForm') saveSale(e);
+  else if (e.target.id==='noteForm') saveNote(e);
+  else if (e.target.id==='salesSetForm') saveSalesSettings(e);
+});
+
 
 /* ================= hubs ================= */
 function categoryHubs(){
@@ -1540,11 +2173,11 @@ function linksOf(pkg){ return (pkg?.linkIds||[]).map(id=>data.links.find(l=>l.id
 const EXTRA_ONLY = ['ext:ted','ext:tedvocab'];
 const isExtraOnly = l => EXTRA_ONLY.includes(l.subcategory);
 const extraIds = s => (s.hubs||[]).filter(m=>String(m.id).startsWith('x:')).map(m=>String(m.id).slice(2));
-const extraLinks = s => extraIds(s).map(id=>data.links.find(l=>l.id===id)).filter(Boolean);
+const extraLinks = s => extraIds(s).map(id=>data.links.find(l=>l.id===id) || (data.allLinks||[]).find(l=>l.id===id)).filter(Boolean);
 function hubLinks(h, withExtras=false){
   if (!h) return [];
-  if (h.kind==='level') return data.links.filter(l=>l.category===h.title && (withExtras || !isExtraOnly(l)));
-  if (h.kind==='exam')  return data.links.filter(l=>l.category==='Exams' && l.exam===h.title && (withExtras || !isExtraOnly(l)));
+  if (h.kind==='level') return data.links.filter(l=>!l.owner && l.category===h.title && (withExtras || !isExtraOnly(l)));
+  if (h.kind==='exam')  return data.links.filter(l=>!l.owner && l.category==='Exams' && l.exam===h.title && (withExtras || !isExtraOnly(l)));
   return linksOf(h.pkg);
 }
 function membersOf(hubId){ return data.students.filter(s=>(s.hubs||[]).some(m=>m.id===hubId)); }
@@ -1615,7 +2248,7 @@ function mailtoFor(s, url){
 }
 
 /* ================= navigation ================= */
-const VIEWS = ['library','hubs','students','diary','compositions','folder'];
+const VIEWS = ['library','hubs','students','diary','compositions','folder','sales'];
 function go(v){
   if (v!=='library' && selecting){ selecting = false; selected = new Set(); updateSelBar(); }
   view = v;
@@ -1630,15 +2263,16 @@ function go(v){
   if (v==='diary') renderDiary();
   if (v==='compositions') renderInbox();
   if (v==='folder') renderFolder();
+  if (v==='sales') renderSales();
 }
 function rerender(){ updateCounts(); go(view); }
 
 /* ================= library ================= */
 function renderLevels(){
-  const count = lv => lv==='ALL' ? data.links.length : data.links.filter(l=>l.category===lv).length;
+  const count = lv => lv==='ALL' ? data.links.length : lv==='MINE' ? data.links.filter(l=>l.owner).length : data.links.filter(l=>l.category===lv).length;
   const btn = lv => `<button class="level-btn" data-action="level" data-level="${esc(lv)}" aria-pressed="${level===lv}">
-      <span>${lv==='ALL'?'All links':esc(lv)}</span><span class="n">${count(lv)}</span></button>`;
-  $('levelNav').innerHTML = `<h2>Levels</h2>${btn('ALL')}<div class="level-sep"></div>
+      <span>${lv==='ALL'?'All links':lv==='MINE'?'⭐ My own links':esc(lv)}</span><span class="n">${count(lv)}</span></button>`;
+  $('levelNav').innerHTML = `<h2>Levels</h2>${btn('ALL')}${ROLE==='partner' ? btn('MINE') : ''}<div class="level-sep"></div>
     ${LEVELS.slice(0,MAIN_LEVELS).map(btn).join('')}<div class="level-sep"></div>${btn('Exams')}<div class="level-sep"></div>${LEVELS.slice(MAIN_LEVELS+1).map(btn).join('')}`;
 }
 function renderExamTabs(){
@@ -1682,7 +2316,8 @@ function renderChips(){
 }
 function cardHTML(l){
   const tags = [];
-  if (level==='ALL') tags.push(`<span class="tag">${esc(l.category)}</span>`);
+  if (level==='ALL' || level==='MINE') tags.push(`<span class="tag">${esc(l.category)}</span>`);
+  if (ROLE==='partner' && l.owner) tags.unshift(`<span class="tag mine">Mine</span>`);
   if (l.category==='Exams' && l.exam && (level==='ALL' || exam==='ALL')) tags.push(`<span class="tag exam">${esc(l.exam)}</span>`);
   return `<article class="card ${sk(l.subcategory).cls}${selecting && selected.has(l.id) ? ' is-selected' : ''}">
     ${selecting ? `<label class="sel-box" title="Select"><input type="checkbox" data-sel="${esc(l.id)}" ${selected.has(l.id)?'checked':''} aria-label="Select ${esc(l.title)}"></label>` : ''}
@@ -1695,8 +2330,8 @@ function cardHTML(l){
       <span class="spacer"></span>
       <button class="btn-icon" data-action="give-link" data-id="${esc(l.id)}" aria-label="Give ${esc(l.title)} to students" title="Give to students">${icon('invite')}</button>
       <button class="btn-icon" data-action="copy-link" data-id="${esc(l.id)}" aria-label="Copy link" title="Copy link">${icon('copy')}</button>
-      <button class="btn-icon" data-action="edit-link" data-id="${esc(l.id)}" aria-label="Edit ${esc(l.title)}" title="Edit">${icon('edit')}</button>
-      <button class="btn-icon del" data-action="del-link" data-id="${esc(l.id)}" aria-label="Delete ${esc(l.title)}" title="Delete">${icon('trash')}</button>
+      ${canEditLink(l) ? `<button class="btn-icon" data-action="edit-link" data-id="${esc(l.id)}" aria-label="Edit ${esc(l.title)}" title="Edit">${icon('edit')}</button>
+      <button class="btn-icon del" data-action="del-link" data-id="${esc(l.id)}" aria-label="Delete ${esc(l.title)}" title="Delete">${icon('trash')}</button>` : ''}
     </div></article>`;
 }
 function renderLibrary(){
@@ -1712,14 +2347,14 @@ function renderLibrary(){
     return;
   }
   const q_ = $('searchInput').value.trim().toLowerCase();
-  const inScope = data.links.filter(l =>
+  const inScope = level==='MINE' ? data.links.filter(l=>l.owner) : data.links.filter(l =>
     (level==='ALL' || l.category===level) &&
     (level!=='Exams' || exam==='ALL' || l.exam===exam));
   const shown = inScope.filter(l =>
     matchSkill(l.subcategory) &&
     (!q_ || [l.title,l.notes,l.subcategory,l.category,l.exam,l.url].some(v=>String(v||'').toLowerCase().includes(q_))));
-  const order = level==='ALL' ? ALL_SKILLS.filter(x=>x!=='general') : skillsFor(level);
-  const specific = level!=='ALL' && !(level==='Exams' && exam==='ALL');
+  const order = (level==='ALL' || level==='MINE') ? ALL_SKILLS.filter(x=>x!=='general') : skillsFor(level);
+  const specific = level!=='ALL' && level!=='MINE' && !(level==='Exams' && exam==='ALL');
   const catBand = (cat, items) => `<section class="band sk-general">
       <div class="band-head"><span class="emoji" aria-hidden="true">${NO_SKILL[cat]}</span><h3>${esc(cat)}</h3>
         <span class="n">${items.length}</span>
@@ -1757,7 +2392,7 @@ function renderLibrary(){
         ${inner || `<p class="band-empty">${b.g==='ext' ? 'No external links yet. Add websites, PDFs and TED talks here, sorted by skill.' : 'Nothing here yet.'}</p>`}
       </section>`;
     }
-    if (level==='ALL' && skill==='ALL'){
+    if ((level==='ALL' || level==='MINE') && skill==='ALL'){
       Object.keys(NO_SKILL).forEach(cat=>{ const items = shown.filter(l=>l.category===cat); if (items.length) bands += catBand(cat, items); });
     }
   }
@@ -1784,7 +2419,7 @@ function openLinkModal(link, preset={}){
   $('linkForm').reset();
   $('fId').value = link ? link.id : '';
   $('mLinkTitle').textContent = link ? 'Edit link' : 'Add link';
-  $('fLevel').value = link ? link.category : (preset.level || (level!=='ALL'?level:'B1'));
+  $('fLevel').value = link ? link.category : (preset.level || (level!=='ALL' && level!=='MINE' ? level : 'B1'));
   $('fExam').value  = link?.exam || preset.exam || (exam!=='ALL'?exam:'Érettségi');
   if (link){ $('fTitle').value = link.title; $('fUrl').value = link.url; $('fNotes').value = link.notes || ''; $('fImage').value = link.image || ''; }
   $('fImagePick').value = (link && String(link.image||'').startsWith('builtin:')) ? link.image.slice(8) : '';
@@ -1810,6 +2445,7 @@ async function saveLink(e){
     notes:$('fNotes').value.trim() };
   if (cat==='Exams') l.exam = $('fExam').value;
   l.image = $('fImage').value.trim();
+  if (ROLE==='partner') l.owner = ME; else { const old = data.links.find(x=>x.id===id); if (old && old.owner) l.owner = old.owner; }
   busy(btn, true);
   try {
     const pic = $('fImageFile').files[0];
@@ -1994,7 +2630,7 @@ function hubCard(h){
     <div class="hub-head"><span class="hub-emoji" aria-hidden="true">${h.emoji}</span>
       <div class="hub-title"><h3>${esc(h.title)}</h3><span class="meta">${bundle ? 'Tailored bundle' : esc(h.sub)} · ${plural(items.length,'link')} · ${plural(mem.length,'student')}</span></div>
     </div>
-    ${bundle?`<div><span class="date" title="3-month bundle">${esc(fmtDate(h.start))} – ${esc(fmtDate(h.end))}</span></div>`:''}
+    ${bundle?`<div><button type="button" class="date date-btn" data-action="bundle-date" data-id="${esc(h.id)}" title="Change the start date">📅 ${esc(fmtDate(h.start))} – ${esc(fmtDate(h.end))} <span class="chg">change</span></button></div>`:''}
     ${bundle && h.pkg.notes?`<p class="notes">${esc(h.pkg.notes)}</p>`:''}
     ${bundle ? listHTML(items) : ''}
     ${membersHTML(h)}
@@ -2095,14 +2731,16 @@ function renderStudents(){
     const fresh = subs.filter(x=>x.status==='submitted').length;
     return `<article class="panel">
       <div class="row"><h3>${esc(s.name)}</h3>${fresh?`<span class="status new">${plural(fresh,'new composition')}</span>`:''}</div>
+      ${whoBadge(s)}
       <span class="meta">${s.email?esc(s.email)+' · ':''}${plural(hubs.length,'hub')} · ${plural(subs.length,'composition')}</span>
       ${profileHTML(s)}
       ${s.notes?`<p class="notes">${esc(s.notes)}</p>`:''}
+      ${lastNoteHTML(s)}
       ${hubs.length ? `<div class="std-progress">${hubs.map(({m,h})=>{ const p = hubProgress(s,h);
         return `<div class="row"><span title="In this hub since ${esc(fmtDate(m.date))}">${h.emoji} ${esc(h.title)}</span>${barHTML(p.done,p.total)}<span>${p.done}/${p.total}</span>
           <button type="button" class="btn-icon del" data-action="remove-member" data-hub="${esc(h.id)}" data-id="${esc(s.id)}" aria-label="Remove from ${esc(h.title)}" title="Remove from hub">${icon('x')}</button></div>`; }).join('')}${ex.length ? `<div class="row"><span title="${esc(ex.map(l=>l.title).join(', '))}">⭐ Just for you (${ex.length})</span>${barHTML(exDone, ex.length)}<span>${exDone}/${ex.length}</span>
           <button type="button" class="btn-icon" data-action="edit-extras" data-id="${esc(s.id)}" aria-label="Edit individual links" title="Edit individual links">${icon('edit')}</button></div>` : ''}</div>`
-        : ex.length ? `<div class="hub-prog"><div class="row"><span title="${esc(ex.map(l=>l.title).join(', '))}">⭐ Just for you (${ex.length})</span>${barHTML(exDone, ex.length)}<span>${exDone}/${ex.length}</span>
+        : ex.length ? `<div class="std-progress"><div class="row"><span title="${esc(ex.map(l=>l.title).join(', '))}">⭐ Just for you (${ex.length})</span>${barHTML(exDone, ex.length)}<span>${exDone}/${ex.length}</span>
           <button type="button" class="btn-icon" data-action="edit-extras" data-id="${esc(s.id)}" aria-label="Edit individual links" title="Edit individual links">${icon('edit')}</button></div></div>`
         : `<div class="members"><span class="member none">Not in any hub yet</span></div>`}
       <div class="panel-actions">
@@ -2113,12 +2751,14 @@ function renderStudents(){
           <button class="btn btn-outline btn-sm" data-action="edit-student" data-id="${esc(s.id)}">${icon('invite')}Add to hubs</button>
           <button class="btn btn-outline btn-sm" data-action="edit-extras" data-id="${esc(s.id)}" title="Pick individual apps and links just for this student (e.g. only BIM or only TED)">⭐ Individual links</button>
           <button class="btn btn-outline btn-sm" data-action="edit-hidden" data-id="${esc(s.id)}" title="Take single apps away from this student's hubs">🚫 Remove links${nHidden?` (${nHidden})`:''}</button>
+          ${partnerReady ? `<button class="btn btn-outline btn-sm" data-action="open-notes" data-id="${esc(s.id)}" title="Class notes, homework and notes for each other">📝 Notes${notesOf(s.id).length?` (${notesOf(s.id).length})`:''}</button>
+          <button class="btn btn-outline btn-sm" data-action="record-sale" data-id="${esc(s.id)}" title="Record a bundle or project sold to this student">💰 Record sale</button>` : ''}
         </div>
         <div class="grp">
           <button class="btn-icon" data-action="preview-student" data-id="${esc(s.id)}" aria-label="Open ${esc(s.name)}'s live page in a new tab" title="Open live student page (new tab)">${icon('open')}</button>
-          <button class="btn-icon" data-action="reset-token" data-id="${esc(s.id)}" aria-label="Make a new link for ${esc(s.name)}" title="New link (the old one stops working)">${icon('key')}</button>
+          ${ownsStudent(s) ? `<button class="btn-icon" data-action="reset-token" data-id="${esc(s.id)}" aria-label="Make a new link for ${esc(s.name)}" title="New link (the old one stops working)">${icon('key')}</button>` : ''}
           <button class="btn-icon" data-action="edit-student" data-id="${esc(s.id)}" aria-label="Edit ${esc(s.name)}" title="Edit">${icon('edit')}</button>
-          <button class="btn-icon del" data-action="del-std" data-id="${esc(s.id)}" aria-label="Delete student" title="Delete">${icon('trash')}</button>
+          ${ownsStudent(s) ? `<button class="btn-icon del" data-action="del-std" data-id="${esc(s.id)}" aria-label="Delete student" title="Delete">${icon('trash')}</button>` : ''}
         </div>
       </div></article>`;
   }).join('');
@@ -2136,11 +2776,15 @@ function openStudentModal(s){
   $('sPurpose').value = s?.purpose||''; $('sInterests').value = s?.interests||''; $('sExamName').value = s?.examName||''; $('sExamLevel').value = s?.examLevel||''; $('sExamDate').value = s?.examDate||'';
   $('sProfileWarn').hidden = schemaV3;
   $('sHubs').innerHTML = hubCheckboxes(new Set((s?.hubs||[]).map(m=>m.id)));
+  const showShare = partnerReady && PARTNERS.length > 0 && (!s || canShare(s));
+  $('sSharedWrap').hidden = !showShare; $('sShared').checked = !!s?.shared;
+  $('sSharedText').textContent = ROLE==='partner' ? `Mutual student – ${ownerName()} can see and teach them too` : `Mutual student – ${partnerNames()} can see and teach them too`;
   openModal('mStd');
 }
 async function createStudent(name, email, notes){
-  const row = await q(sb.from('students').insert({id:uid('std'), name, email:email||'', notes:notes||''}).select().single());
-  const s = {id:row.id, name:row.name, email:row.email, notes:row.notes, token:row.token, hubs:[]};
+  const extra = partnerReady ? {shared: !!(arguments[3]), ...(ROLE==='partner' ? {owner:ME} : {})} : {};
+  const row = await q(sb.from('students').insert({id:uid('std'), name, email:email||'', notes:notes||'', ...extra}).select().single());
+  const s = {id:row.id, name:row.name, email:row.email, notes:row.notes, token:row.token, owner:row.owner||null, shared:!!row.shared, hubs:[]};
   data.students.unshift(s);
   return s;
 }
@@ -2154,9 +2798,11 @@ async function saveStudent(e){
     const prof = {purpose:$('sPurpose').value.trim(), interests:$('sInterests').value.trim(), examName:$('sExamName').value.trim(), examLevel:$('sExamLevel').value, examDate:$('sExamDate').value};
     if (s){
       Object.assign(s, {name:$('sName').value.trim(), email:$('sEmail').value.trim(), notes:$('sNotes').value.trim()});
-      await q(sb.from('students').update({name:s.name, email:s.email, notes:s.notes}).eq('id', s.id));
+      const upd = {name:s.name, email:s.email, notes:s.notes};
+      if (partnerReady && canShare(s)){ upd.shared = $('sShared').checked; s.shared = upd.shared; }
+      await q(sb.from('students').update(upd).eq('id', s.id));
     } else {
-      s = await createStudent($('sName').value.trim(), $('sEmail').value.trim(), $('sNotes').value.trim());
+      s = await createStudent($('sName').value.trim(), $('sEmail').value.trim(), $('sNotes').value.trim(), partnerReady && $('sShared').checked);
     }
     if (schemaV3){
       await q(sb.from('students').update({purpose:prof.purpose, interests:prof.interests, exam_name:prof.examName, exam_level:prof.examLevel, exam_date:prof.examDate||null}).eq('id', s.id));
@@ -2304,7 +2950,8 @@ async function renderFolder(){
           <div class="field"><label for="cf-${esc(x.id)}">Corrected file</label><input id="cf-${esc(x.id)}" type="file"></div>
         </div>
         ${x.corrected_path ? `<div class="field">${fileLink(urls[x.corrected_path], x.corrected_name, 'Your corrected file')}</div>` : ''}
-        ${x.text_body !== null && x.text_body !== undefined ? `<div class="field"><label for="ct-${esc(x.id)}">Corrected version</label><textarea id="ct-${esc(x.id)}" rows="8">${esc(x.corrected_text ?? x.text_body)}</textarea></div>` : ''}
+        ${x.text_body !== null && x.text_body !== undefined ? `<div class="field"><label for="ct-${esc(x.id)}">Corrected version – edit the student's text directly</label><textarea id="ct-${esc(x.id)}" data-diff-src="${esc(x.id)}" rows="8">${esc(x.corrected_text ?? x.text_body)}</textarea></div>
+        <div class="field"><label>What ${esc(firstName(s.name))} will see</label>${diffLegend()}<div class="essay cx" id="cxp-${esc(x.id)}">${diffHTML(x.text_body, x.corrected_text ?? x.text_body)}</div></div>` : ''}
         <div class="modal-foot" style="justify-content:space-between">
           <button type="button" class="btn-icon del" data-action="del-sub" data-id="${esc(x.id)}" aria-label="Delete composition" title="Delete">${icon('trash')}</button>
           <button type="button" class="btn btn-primary" data-action="save-correction" data-id="${esc(x.id)}">${x.status==='corrected'?'Update correction':'Send correction'}</button>
@@ -2367,7 +3014,6 @@ function examFrom(text){
 function fromOfflineFormat(old){
   const links = (old.links||[]).map(l0=>{
     const l = {...l0};
-    if (l.category==='Mini') l.category='Junior';
     if (l.category==='C1+') l.category='C1';
     if (l.category==='Exam Prep') l.category='Exams';
     if (l.category==='Exams'){
@@ -2693,7 +3339,9 @@ function stFolderHTML(){
       <span class="meta">Handed in ${esc(fmtDate(x.created_at))}${x.corrected_at?' · corrected '+esc(fmtDate(x.corrected_at)):''}</span>
       ${x.status==='corrected' && (x.feedback || x.grade) ? `<div class="feedback">${x.grade?`<b>Grade: ${esc(x.grade)}</b><br>`:''}${esc(x.feedback).replace(/\n/g,'<br>')}</div>` : ''}
       ${x.corrected_path ? `<div>${fileLink(st.urls[x.corrected_path], x.corrected_name, 'Corrected version')}</div>` : ''}
-      ${x.corrected_text ? `<details open><summary>Corrected version</summary><div class="essay corrected">${esc(x.corrected_text)}</div></details>` : ''}
+      ${x.corrected_text && x.text_body && x.corrected_text !== x.text_body ? `<details open><summary>Your text with my corrections</summary>${diffLegend()}<div class="essay cx">${diffHTML(x.text_body, x.corrected_text)}</div></details>
+        <details><summary>Clean corrected version</summary><div class="essay corrected">${esc(x.corrected_text)}</div></details>`
+        : x.corrected_text ? `<details open><summary>Corrected version</summary><div class="essay corrected">${esc(x.corrected_text)}</div></details>` : ''}
       ${x.text_body ? `<details><summary>My text</summary><div class="essay">${esc(x.text_body)}</div></details>` : ''}
       ${x.file_path ? `<div>${fileLink(st.urls[x.file_path], x.file_name, 'My file')}</div>` : ''}
       ${x.status==='submitted' ? `<div><button type="button" class="linkish" data-st="withdraw" data-id="${esc(x.id)}">Take it back</button></div>` : ''}
@@ -2712,6 +3360,7 @@ function renderStudentPage(){
         </div>
       </div>
     </div>
+    ${st.tab==='links' ? stHomeworkHTML() : ''}
     <div id="stBody">${st.tab==='links' ? stLinksHTML() : stFolderHTML()}</div>`;
   requestAnimationFrame(()=>fitGrids($('studentView')));
 }
@@ -2973,7 +3622,8 @@ function previewPortal(s){
   const hid = new Set(hiddenIds(s));
   const hubs = finalHubs(s).filter(x=>x.links.length || !x.raw.some(l=>!hid.has(l.id))).map(x=>({id:x.id, title:x.title, start:x.start, months:x.months,
     links: x.links.map(l=>({...l, skill:l.subcategory||'general'}))}));
-  return {student:{id:s.id, name:s.name}, hubs, done:[...doneSet(s.id)]};
+  return {student:{id:s.id, name:s.name}, hubs, done:[...doneSet(s.id)],
+    homework: notesOf(s.id).filter(n=>n.for_student).map(n=>({id:n.id, body:n.body, date:n.note_date, done:n.done}))};
 }
 /* take one link away from one student, straight from the Student view */
 async function removeForStudent(sid, linkId){
@@ -3084,14 +3734,22 @@ function showLogin(msg){
   });
 }
 async function enterTeacher(){
-  const ok = await sb.rpc('is_teacher');
+  /* hub_role() comes with learning-hub-partner-setup.sql; without it the hub works as before (you only) */
+  let role = null;
+  const r = await sb.rpc('hub_role');
+  if (!r.error){ partnerReady = true; role = r.data || null; }
+  else { const t = await sb.rpc('is_teacher'); role = (!t.error && t.data) ? 'owner' : null; }
+  const ok = {data: !!role};
+  ROLE = role || 'owner';
+  document.body.classList.toggle('partner-mode', ROLE==='partner');
+  document.body.classList.toggle('partner-ready', partnerReady);
   if (ok.error || !ok.data){
     gate(`<h2>Not a teacher account</h2><p>You are logged in, but this email isn't on the teacher list. Add it to the <code>teachers</code> table (step 6 of the setup file).</p>
       <button class="btn btn-outline" id="lgOut">Log out</button>`);
     $('lgOut').addEventListener('click', ()=>sb.auth.signOut().then(()=>location.reload()));
     return;
   }
-  try { await loadAll(); if (data.links.length || !localStorage.getItem(OLD_STORE_KEY)) await syncBuiltInLinks(); await migrateSections(); await cleanupExternalOnce(); } catch(e){ gate(`<h2>Couldn't load your hub</h2><p>Check that the setup SQL has been run, then reload.</p>`); return; }
+  try { await loadAll(); if (ROLE==='owner'){ if (data.links.length || !localStorage.getItem(OLD_STORE_KEY)) await syncBuiltInLinks(); await migrateSections(); await cleanupExternalOnce(); } } catch(e){ gate(`<h2>Couldn't load your hub</h2><p>Check that the setup SQL has been run, then reload.</p>`); return; }
   $('gateView').hidden = true; $('teacherMain').hidden = false; $('tabs').hidden = false; $('topActions').hidden = false; $('statPill').hidden = false;
   updateCounts();
   const back = takeReturnState('teacher');
