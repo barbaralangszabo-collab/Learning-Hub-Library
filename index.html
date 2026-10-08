@@ -1823,7 +1823,9 @@ const HUB_DEFAULTS = {prices:{bundle:26000, baking:4000, pro:28000, material6:12
 let HUBSET = JSON.parse(JSON.stringify(HUB_DEFAULTS));
 data.sales = []; data.notes = [];
 
+const sortStudents = () => { (data.students||[]).sort((a,b)=>String(a.name||'').localeCompare(String(b.name||''), 'hu', {sensitivity:'base'})); return data.students; };
 async function loadPartnerData(){
+  sortStudents();
   data.sales = []; data.notes = []; data.lessons = []; data.lessonMonths = []; lessonsReady = false;
   if (!partnerReady) return;
   try {
@@ -1959,6 +1961,7 @@ async function saveSale(e){
 /* ================= sales summary ================= */
 let salesPeriod = (()=>{ const d = new Date(); return {mode:'month', y:d.getFullYear(), m:d.getMonth()}; })();
 function periodRange(){
+  if (salesPeriod.mode==='all') return {from:'0000-01-01', to:'9999-12-31', label:'All sales'};
   const {mode, y, m} = salesPeriod, m0 = mode==='quarter' ? Math.floor(m/3)*3 : m, len = mode==='quarter' ? 3 : 1;
   const from = new Date(y, m0, 1), to = new Date(y, m0+len, 1);
   const lbl = mode==='quarter'
@@ -1966,7 +1969,7 @@ function periodRange(){
     : from.toLocaleDateString('en-GB', {month:'long', year:'numeric'});
   return {from:isoOf(from), to:isoOf(to), label:lbl};
 }
-function shiftPeriod(dir){ const step = salesPeriod.mode==='quarter' ? 3 : 1; const d = new Date(salesPeriod.y, salesPeriod.m + dir*step, 1); salesPeriod.y = d.getFullYear(); salesPeriod.m = d.getMonth(); renderSales(); }
+function shiftPeriod(dir){ if (salesPeriod.mode==='all') return; const step = salesPeriod.mode==='quarter' ? 3 : 1; const d = new Date(salesPeriod.y, salesPeriod.m + dir*step, 1); salesPeriod.y = d.getFullYear(); salesPeriod.m = d.getMonth(); renderSales(); }
 function salesRows(){
   const r = periodRange();
   return data.sales.filter(x=>String(x.sale_date) >= r.from && String(x.sale_date) < r.to)
@@ -2001,8 +2004,13 @@ function renderSales(){
   const cardsHTML = cards => `<div class="sum-cards">${cards.map(c=>`<div class="sum-card"><span>${esc(c[0])}</span><b>${esc(c[1])}</b>${c[2]?`<small>${esc(c[2])}</small>`:''}</div>`).join('')}</div>`;
   $('salesTools').innerHTML = `<div class="seg" role="group" aria-label="Period">
       <button type="button" data-sales="mode" data-mode="month" aria-pressed="${salesPeriod.mode==='month'}">Month</button>
-      <button type="button" data-sales="mode" data-mode="quarter" aria-pressed="${salesPeriod.mode==='quarter'}">3 months</button></div>
-    <div class="period"><button type="button" class="btn-icon" data-sales="prev" aria-label="Previous period">‹</button><b>${esc(r.label)}</b><button type="button" class="btn-icon" data-sales="next" aria-label="Next period">›</button></div>`;
+      <button type="button" data-sales="mode" data-mode="quarter" aria-pressed="${salesPeriod.mode==='quarter'}">3 months</button>
+      <button type="button" data-sales="mode" data-mode="all" aria-pressed="${salesPeriod.mode==='all'}">All</button></div>
+    ${salesPeriod.mode==='all' ? '' : `<div class="period"><button type="button" class="btn-icon" data-sales="prev" aria-label="Previous period">‹</button><b>${esc(r.label)}</b><button type="button" class="btn-icon" data-sales="next" aria-label="Next period">›</button></div>`}`;
+  const mineAll = data.sales.filter(x=>ROLE==='owner' || !ME || String(x.seller).toLowerCase()===String(ME).toLowerCase());
+  const outside = salesPeriod.mode==='all' ? [] : mineAll.filter(x=>!rows.includes(x));
+  const latest = outside.map(x=>String(x.sale_date)).sort().pop();
+  const outsideNote = outside.length ? `<p class="note-box">${esc(plural(outside.length, 'other sale'))} outside ${esc(r.label)} (latest: ${esc(fmtDate(latest))}). Press <button type="button" class="linkish" data-sales="mode" data-mode="all">All</button> or use ‹ › to see them.</p>` : '';
   let html;
   if (isP){
     const b = balanceOf(rows, ME_ROW ? ME_ROW.name : 'You');
@@ -2027,7 +2035,7 @@ function renderSales(){
             + salesTable(k.rows, {comm:true, who:k.name, empty:`${k.name} has no sales in ${r.label}.`}); }).join('')
       + `<h3 class="section-title">My sales</h3>` + salesTable(mine, {comm:false, empty:`You have no sales in ${r.label}.`});
   }
-  box.innerHTML = html + `
+  box.innerHTML = outsideNote + html + `
     <h3 class="section-title">Product sheets</h3>
     <p class="hint">A short, ready-to-send description of each product, in Hungarian or English. Copy it into an email or Messenger, or save it as a PDF.</p>
     <div class="prod-grid">${products().filter(p=>!p.noSheet).map(p=>`<article class="panel prod">
@@ -2285,7 +2293,7 @@ function hubLinks(h, withExtras=false){
   if (h.kind==='exam')  return data.links.filter(l=>!l.owner && l.category==='Exams' && l.exam===h.title && (withExtras || !isExtraOnly(l)));
   return linksOf(h.pkg);
 }
-function membersOf(hubId){ return data.students.filter(s=>(s.hubs||[]).some(m=>m.id===hubId)); }
+function membersOf(hubId){ return sortStudents().filter(s=>(s.hubs||[]).some(m=>m.id===hubId)); }
 const doneSet = sid => new Set(data.progress.filter(p=>p.student_id===sid).map(p=>p.link_id));
 /* special memberships: x:<link> = individual link for a student, h:<link> = link removed from that student */
 const isSpecialHub = id => /^(x|h):/.test(String(id));
@@ -2909,7 +2917,7 @@ function openEntryModal(e){
   $('eId').value = e ? e.id : '';
   $('mEntryTitle').textContent = e ? 'Edit entry' : 'Add entry';
   $('eDate').value = e ? e.entry_date : today();
-  $('eStudent').innerHTML = '<option value="">–</option>' + data.students.map(s=>`<option value="${esc(s.id)}">${esc(s.name)}</option>`).join('');
+  $('eStudent').innerHTML = '<option value="">–</option>' + sortStudents().map(s=>`<option value="${esc(s.id)}">${esc(s.name)}</option>`).join('');
   $('eStudent').value = e?.student_id || '';
   $('eTitle').value = e ? e.title : ''; $('eNote').value = e ? (e.note||'') : '';
   openModal('mEntry');
@@ -3062,7 +3070,7 @@ function renderStudents(){
     g.innerHTML = `<div class="empty" style="grid-column:1/-1"><h3>No students yet</h3><p>Add a student, then invite them to a level, an exam or a bundle.</p>
       <button class="btn btn-primary" data-action="new-student">${icon('plus')}Add student</button></div>`; return;
   }
-  g.innerHTML = data.students.map(s=>{
+  g.innerHTML = sortStudents().map(s=>{
     const hubs = (s.hubs||[]).map(m=>({m, h:findHub(m.id)})).filter(x=>x.h);
     const ex = (finalHubs(s).find(x=>x.id==='extras')||{links:[]}).links, exDone = ex.filter(l=>doneSet(s.id).has(l.id)).length, nHidden = hiddenIds(s).length;
     const subs = data.submissions.filter(x=>x.student_id===s.id);
@@ -3187,7 +3195,7 @@ async function removeMember(sid, hubId){
 
 /* ================= inviting ================= */
 function renderInvitePick(sel){
-  $('invPick').innerHTML = data.students.length ? data.students.map(s=>{
+  $('invPick').innerHTML = data.students.length ? sortStudents().map(s=>{
     const member = (s.hubs||[]).some(m=>m.id===inviteHub);
     return `<label class="pick-row"><input type="checkbox" name="invStd" value="${esc(s.id)}" ${member?'checked disabled':(sel.has(s.id)?'checked':'')}>
       <span class="t">${esc(s.name)}</span>${member?'<span class="tag exam">Already in</span>':(s.email?`<span class="tag">${esc(s.email)}</span>`:'')}</label>`;
