@@ -772,7 +772,7 @@ body{overflow-x:clip}
 }
 
 /* ---------- partner teacher, sales, notes ---------- */
-#sSharedWrap[hidden],#saleOtherWrap[hidden],#saleGiveWrap[hidden],#noteForStudentWrap[hidden],#saleSellerWrap[hidden],#tab-sales[hidden]{display:none!important}
+#lNameWrap[hidden],#lWhoWrap[hidden],#lHoursWrap[hidden],#lCutWrap[hidden],#lDelete[hidden],#tab-lessons[hidden],#sSharedWrap[hidden],#saleOtherWrap[hidden],#saleGiveWrap[hidden],#noteForStudentWrap[hidden],#saleSellerWrap[hidden],#tab-sales[hidden]{display:none!important}
 body.partner-mode [data-action="backup"], body.partner-mode #selToggle, body.partner-mode #findPics, body.partner-mode #tab-diary,
 body.partner-mode #remBanner, body.partner-mode [data-action="new-bundle"], body.partner-mode [data-action="edit-bundle"],
 body.partner-mode [data-action="del-bundle"], body.partner-mode [data-action="renew-bundle"], body.partner-mode [data-action="add-apps"],
@@ -788,6 +788,17 @@ body.partner-mode [data-action="move-local"], body.partner-mode .owner-only{disp
 .sales-tools .period{display:flex;align-items:center;gap:6px;font-family:var(--ui);font-size:1.05rem}
 .sales-tools .period .btn-icon{font-size:1.4rem;line-height:1}
 .sales-tools select{font-family:var(--ui);padding:8px 12px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+table.lessons td small{display:block}
+table.lessons td:first-child{min-width:140px}
+table.lessons td{white-space:normal}
+.lcount{white-space:nowrap}
+.lcount{display:inline-flex;align-items:center;gap:6px}
+.lcount b{min-width:1.6em;text-align:center;font-size:1.05rem}
+.lcount .btn-icon{width:30px;height:30px;border:1px solid var(--line);border-radius:999px;font-weight:700;font-size:1.1rem;line-height:1}
+.lcount .btn-icon:disabled{opacity:.35}
+.linkish{border:0;background:none;padding:0;color:var(--teal);text-decoration:underline;font:inherit;cursor:pointer}
+.modal-foot .del-left{margin-right:auto}
+#lErr{color:var(--danger);font-family:var(--ui);font-weight:700;font-size:.9rem;min-height:1em;margin:4px 0}
 .sum-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:10px 0}
 .sum-card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:2px;font-family:var(--ui)}
 .sum-card span{font-size:.8rem;color:var(--ink-soft);font-weight:700}
@@ -885,6 +896,7 @@ body.partner-mode .date-btn .chg{display:none}
   <button class="tab" role="tab" id="tab-students" aria-selected="false" data-action="go" data-view="students"><span class="em" aria-hidden="true">🎓</span>Students <span class="sr">(<span id="c-stds">0</span>)</span></button>
   <button class="tab" role="tab" id="tab-diary" aria-selected="false" data-action="go" data-view="diary"><span class="em" aria-hidden="true">📅</span>Diary <span class="badge-n" id="c-rem" hidden>0</span></button>
   <button class="tab" role="tab" id="tab-sales" aria-selected="false" data-action="go" data-view="sales" hidden><span class="em" aria-hidden="true">💰</span>Sales</button>
+  <button class="tab" role="tab" id="tab-lessons" aria-selected="false" data-action="go" data-view="lessons" hidden><span class="em" aria-hidden="true">💶</span>Lessons</button>
   <button class="tab" role="tab" id="tab-compositions" aria-selected="false" data-action="go" data-view="compositions"><span class="em" aria-hidden="true">📝</span>Compositions <span class="badge-n" id="c-new" hidden>0</span></button>
 </nav>
 
@@ -976,6 +988,16 @@ body.partner-mode .date-btn .chg{display:none}
     </div>
     <div class="sales-tools" id="salesTools"></div>
     <div id="salesBody"></div>
+  </section>
+
+  <section class="view" id="view-lessons" hidden>
+    <div class="hero">
+      <div class="page-head"><h2>Lessons &amp; payments</h2>
+        <div class="head-btns"><button class="btn btn-primary" data-action="lesson-new"><svg class="i"><use href="#i-plus"/></svg>Add student</button></div></div>
+      <p class="note-box">Counted automatically from the calendar: how many lessons every student has, how much they pay and what you have earned so far. You only enter cancelled lessons. Only you see your own students here.</p>
+    </div>
+    <div class="sales-tools" id="lessonsTools"></div>
+    <div id="lessonsBody"></div>
   </section>
 
   <!-- ONE STUDENT'S FOLDER -->
@@ -1116,6 +1138,37 @@ body.partner-mode .date-btn .chg{display:none}
   </div>
 </div>
 
+<!-- LESSONS: ONE STUDENT'S PLAN -->
+<div class="overlay" id="mLesson" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="mLessonTitle">
+    <div class="modal-head"><h3 id="mLessonTitle">Add a student</h3><button class="btn-icon" data-action="close" aria-label="Close"><svg class="i"><use href="#i-x"/></svg></button></div>
+    <form id="lessonForm">
+      <div class="field"><label for="lStudent">Student</label><select id="lStudent"></select></div>
+      <div class="field" id="lNameWrap" hidden><label for="lName">Name</label><input id="lName" placeholder="e.g. Robi"></div>
+      <div class="field" id="lWhoWrap"><label for="lWho">Who teaches, who collects the money</label><select id="lWho"></select></div>
+      <div class="fields-3">
+        <div class="field"><label for="lRate">Price (Ft)</label><input id="lRate" type="number" min="0" step="500" required></div>
+        <div class="field"><label for="lUnit">Price is</label><select id="lUnit"><option value="lesson">per lesson</option><option value="hour">per hour</option></select></div>
+        <div class="field" id="lHoursWrap" hidden><label for="lHours">One lesson lasts (hours)</label><input id="lHours" type="number" min="0.25" step="0.25" value="1"></div>
+      </div>
+      <div class="field"><label for="lBilling">Payment</label><select id="lBilling">
+        <option value="monthly">Pays every month</option>
+        <option value="bundle3">Prepays every 3 months (with the 3-month bundle)</option></select>
+        <small class="hint" id="lBillHint"></small></div>
+      <div class="field" id="lCutWrap" hidden><label for="lCut" id="lCutLabel">She keeps per lesson (Ft)</label><input id="lCut" type="number" min="0" step="100" value="1000"></div>
+      <div class="fields-3">
+        <div class="field"><label for="lPerWeek">How often</label><select id="lPerWeek">
+          <option value="0.5">Every other week</option><option value="1">Once a week</option><option value="2">Twice a week</option><option value="3">Three times a week</option></select></div>
+        <div class="field"><label for="lStart">First lesson</label><input id="lStart" type="date"></div>
+        <div class="field"><label for="lEnd">Last lesson (if stopped)</label><input id="lEnd" type="date"></div>
+      </div>
+      <p class="hint" id="lDaysHint"></p>
+      <p class="err" id="lErr" role="alert"></p>
+      <div class="modal-foot"><button type="button" class="btn btn-outline del-left" id="lDelete" hidden>Remove</button><button type="button" class="btn btn-outline" data-action="close">Cancel</button><button type="submit" class="btn btn-primary">Save</button></div>
+    </form>
+  </div>
+</div>
+
 <!-- NOTES, CLASS NOTES & HOMEWORK -->
 <div class="overlay" id="mNotes" hidden>
   <div class="modal wide" role="dialog" aria-modal="true" aria-labelledby="mNotesTitle">
@@ -1163,6 +1216,7 @@ body.partner-mode .date-btn .chg{display:none}
         <div class="field"><label for="setPBundle">3-month bundle (Ft)</label><input id="setPBundle" type="number" min="0" step="500"></div>
         <div class="field"><label for="setPBaking">Baking with Alice project (Ft)</label><input id="setPBaking" type="number" min="0" step="500"></div>
         <div class="field"><label for="setPPro">Professional English (Ft)</label><input id="setPPro" type="number" min="0" step="500"></div>
+        <div class="field"><label for="setPMat6">Digital material – 6 months (Ft)</label><input id="setPMat6" type="number" min="0" step="500"></div>
       </div>
       <div class="fields-3">
         <div class="field"><label for="setOwnerName">Your name (on notes &amp; sheets)</label><input id="setOwnerName"></div>
@@ -1764,14 +1818,18 @@ const diffLegend = () => `<p class="cx-legend"><del class="cx-del">removed</del>
 /* ================= partner teacher, sales tracker, notes & product sheets =================
    Needs learning-hub-partner-setup.sql. Without it, everything here stays switched off. */
 let ROLE = 'owner', ME = null, ME_ROW = null, partnerReady = false, PARTNERS = [];
-const HUB_DEFAULTS = {prices:{bundle:26000, baking:4000, pro:28000}, collects:'partner', owner_name:'Barbara',
+const HUB_DEFAULTS = {prices:{bundle:26000, baking:4000, pro:28000, material6:12000}, collects:'partner', owner_name:'Barbara',
   demo_url:'https://barbaralangszabo-collab.github.io/Learning-Hub-Reference/'};
 let HUBSET = JSON.parse(JSON.stringify(HUB_DEFAULTS));
 data.sales = []; data.notes = [];
 
 async function loadPartnerData(){
-  data.sales = []; data.notes = [];
+  data.sales = []; data.notes = []; data.lessons = []; data.lessonMonths = []; lessonsReady = false;
   if (!partnerReady) return;
+  try {
+    const [ls, lm] = await Promise.all([sb.from('hub_lessons').select('*').order('student_name'), sb.from('hub_lesson_months').select('*')]);
+    lessonsReady = !ls.error; data.lessons = ls.data || []; data.lessonMonths = lm.data || [];
+  } catch(_){ lessonsReady = false; }
   const [sales, notes, sets, partners] = await Promise.all([
     sb.from('hub_sales').select('*').order('sale_date', {ascending:false}).order('created_at', {ascending:false}),
     sb.from('hub_notes').select('*').order('note_date', {ascending:false}).order('created_at', {ascending:false}),
@@ -1796,6 +1854,7 @@ async function loadPartnerData(){
   const t = document.querySelector('.brand .tagline');
   if (t && ROLE==='partner') t.textContent = `Partner teacher · ${ME_ROW ? ME_ROW.name : ''}`;
   if ($('tab-sales')) $('tab-sales').hidden = false;
+  if ($('tab-lessons')) $('tab-lessons').hidden = false;
 }
 
 /* ---------- who is who ---------- */
@@ -1837,9 +1896,10 @@ function products(){
   const pro = findHub('lvl:Professional English');
   if (pro) out.push({key:'pro', type:'pro', title:'Professional English', price:P.pro, access:pro.id, links:hubLinks(pro)});
   data.links.filter(l=>!l.owner && l.category==='Baking with Alice').forEach(l=>out.push({key:'baking:'+l.id, type:'baking', title:l.title, price:P.baking, access:'x:'+l.id, links:[l]}));
+  out.push({key:'material6', type:'material6', title:'Digital material – 6 months', price:P.material6 ?? HUB_DEFAULTS.prices.material6, links:[], noSheet:true});
   return out;
 }
-const PRODUCT_LABEL = {bundle:'3-month bundle', pro:'Professional English', baking:'Baking with Alice project', other:'Other'};
+const PRODUCT_LABEL = {bundle:'3-month bundle', pro:'Professional English', baking:'Baking with Alice project', material6:'Digital material – 6 months', other:'Other'};
 const NOTE_KIND = {class:{emoji:'🗒️', label:'Class notes'}, homework:{emoji:'📚', label:'Homework'}, note:{emoji:'💬', label:'Note for each other'}};
 
 /* ================= record a sale ================= */
@@ -1848,7 +1908,7 @@ function openSale(sid){
   if (!stds.length){ toast('Add a student first'); return; }
   $('saleStudent').innerHTML = stds.map(s=>`<option value="${esc(s.id)}" ${s.id===sid?'selected':''}>${esc(s.name)}</option>`).join('');
   const ps = products(), grp = (t, label) => { const xs = ps.filter(p=>p.type===t); return xs.length ? `<optgroup label="${esc(label)}">${xs.map(p=>`<option value="${esc(p.key)}">${esc(p.title)} – ${esc(fmtFt(p.price))}</option>`).join('')}</optgroup>` : ''; };
-  $('saleProduct').innerHTML = grp('bundle','3-month bundles') + grp('pro','Professional English') + grp('baking','Baking with Alice projects') + `<optgroup label="Other"><option value="other">Something else (type it in)</option></optgroup>`;
+  $('saleProduct').innerHTML = grp('bundle','3-month bundles') + grp('pro','Professional English') + grp('baking','Baking with Alice projects') + grp('material6','Digital material') + `<optgroup label="Other"><option value="other">Something else (type it in)</option></optgroup>`;
   $('saleSellerWrap').hidden = ROLE!=='owner' || !PARTNERS.length;
   $('saleSeller').innerHTML = `<option value="owner">${esc(ownerName())} (me)</option>` + PARTNERS.map(p=>`<option value="${esc(p.email)}">${esc(p.name)} (${Math.round(p.commission*100)}% commission)</option>`).join('');
   $('saleDate').value = today(); $('salePaid').checked = false; $('saleGive').checked = true; $('saleNote').value = ''; $('saleOther').value = '';
@@ -1859,7 +1919,7 @@ function saleProductChanged(){
   const key = $('saleProduct').value, p = products().find(x=>x.key===key);
   $('saleOtherWrap').hidden = key!=='other';
   $('salePrice').value = p ? p.price : '';
-  $('saleGiveWrap').hidden = !p;
+  $('saleGiveWrap').hidden = !p || !p.access;
   updateSaleCommission();
 }
 function updateSaleCommission(){
@@ -1970,7 +2030,7 @@ function renderSales(){
   box.innerHTML = html + `
     <h3 class="section-title">Product sheets</h3>
     <p class="hint">A short, ready-to-send description of each product, in Hungarian or English. Copy it into an email or Messenger, or save it as a PDF.</p>
-    <div class="prod-grid">${products().map(p=>`<article class="panel prod">
+    <div class="prod-grid">${products().filter(p=>!p.noSheet).map(p=>`<article class="panel prod">
       <h4>${esc(p.title)}</h4><span class="meta">${esc(PRODUCT_LABEL[p.type])} · ${esc(fmtFt(p.price))}${p.links.length>1?' · '+plural(p.links.length,'app'):''}</span>
       <button type="button" class="btn btn-outline btn-sm" data-sales="sheet" data-key="${esc(p.key)}">📄 Product sheet</button></article>`).join('') || '<p class="hint">Create a 3-month bundle first.</p>'}</div>`;
   const intro = $('salesIntro');
@@ -2002,7 +2062,7 @@ function exportSales(){
 function openSalesSettings(){
   const P = HUBSET.prices || HUB_DEFAULTS.prices;
   $('setOwnerName').value = ownerName();
-  $('setPBundle').value = P.bundle; $('setPBaking').value = P.baking; $('setPPro').value = P.pro;
+  $('setPBundle').value = P.bundle; $('setPBaking').value = P.baking; $('setPPro').value = P.pro; $('setPMat6').value = P.material6 ?? HUB_DEFAULTS.prices.material6;
   $('setDemo').value = HUBSET.demo_url || HUB_DEFAULTS.demo_url;
   renderPartnerList();
   openModal('mSalesSet');
@@ -2014,7 +2074,7 @@ function renderPartnerList(){
 }
 async function saveSalesSettings(e){
   e.preventDefault();
-  const prices = {bundle:Math.round(Number($('setPBundle').value)||0), baking:Math.round(Number($('setPBaking').value)||0), pro:Math.round(Number($('setPPro').value)||0)};
+  const prices = {bundle:Math.round(Number($('setPBundle').value)||0), baking:Math.round(Number($('setPBaking').value)||0), pro:Math.round(Number($('setPPro').value)||0), material6:Math.round(Number($('setPMat6').value)||0)};
   const rows = [{key:'prices', value:prices}, {key:'collects', value:'partner'}, {key:'demo_url', value:$('setDemo').value.trim()}, {key:'owner_name', value:$('setOwnerName').value.trim() || 'Barbara'}];
   busy(e.submitter, true);
   try { await q(sb.from('hub_settings').upsert(rows)); } catch(err){ busy(e.submitter, false); return; }
@@ -2292,8 +2352,240 @@ function mailtoFor(s, url){
   return `mailto:${s.email||''}?subject=${encodeURIComponent('Your Piece of Cake Learning Hub: '+hubs)}&body=${encodeURIComponent(inviteText(s,url))}`;
 }
 
+/* ================= lessons & payments ================= */
+let lessonsReady = false, lessonsMonth = (()=>{ const d = new Date(); return {y:d.getFullYear(), m:d.getMonth()}; })(), lessonEditing = null;
+const WEEKDAYS = [[1,'Mon'],[2,'Tue'],[3,'Wed'],[4,'Thu'],[5,'Fri'],[6,'Sat'],[0,'Sun']];
+const meId = () => ROLE==='owner' ? 'owner' : ME;
+const whoName = w => w==='owner' ? ownerName() : ((partnerOf(w)||{}).name || w || '');
+const ymOf = (y, m) => `${y}-${pad(m+1)}`;
+const lessonDays = L => String(L.days||'').split(',').filter(x=>x!=='').map(Number);
+const lessonPrice = L => Math.round((Number(L.rate)||0) * (L.unit==='hour' ? (Number(L.hours)||1) : 1));
+const dayNo = (y, m, d) => Math.round(Date.UTC(y, m, d) / 864e5);
+const isoDayNo = iso => { const [y,m,d] = String(iso).slice(0,10).split('-').map(Number); return dayNo(y, m-1, d); };
+function lessonActive(L, y, m){
+  const first = dayNo(y, m, 1), last = dayNo(y, m+1, 0);
+  return !(L.start_date && isoDayNo(L.start_date) > last) && !(L.end_date && isoDayNo(L.end_date) < first);
+}
+const startWeekday = L => { const [y,m,d] = String(L.start_date||isoOf(new Date())).slice(0,10).split('-').map(Number); return new Date(y, m-1, d).getDay(); };
+const isoOfDayNo = k => { const d = new Date(k*864e5); return `${d.getUTCFullYear()}-${pad(d.getUTCMonth()+1)}-${pad(d.getUTCDate())}`; };
+const todayNo = () => { const t = new Date(); return dayNo(t.getFullYear(), t.getMonth(), t.getDate()); };
+/* lessons counted from the calendar: every week (or every other week) on the weekday of the first lesson */
+function countLessons(L, from, to){
+  const set = lessonDays(L), pw = Number(L.per_week)||1;
+  const days = set.length ? set : [startWeekday(L)], each = set.length ? 1 : Math.max(1, pw);
+  const start = L.start_date ? isoDayNo(L.start_date) : -Infinity;
+  from = Math.max(from, start); to = Math.min(to, L.end_date ? isoDayNo(L.end_date) : Infinity);
+  let n = 0;
+  for (let k = from; k <= to; k++){
+    if (!days.includes(new Date(k*864e5).getUTCDay())) continue;
+    if (pw < 1 && isFinite(start) && Math.floor((k - start)/7) % 2) continue;      /* every other week */
+    n += each;
+  }
+  return n;
+}
+function plannedClasses(L, y, m, upTo){
+  if (!lessonActive(L, y, m)) return 0;
+  return countLessons(L, dayNo(y, m, 1), Math.min(dayNo(y, m+1, 0), upTo ?? Infinity));
+}
+const prepaid = L => L.billing==='bundle3';
+/* a prepaid student's 3-month periods follow her 3-month bundle (or the first lesson date) */
+function periodFor(L, y, m){
+  const monthEnd = isoOf(new Date(y, m+1, 0)), monthStart = isoOf(new Date(y, m, 1));
+  let anchor = String(L.start_date||today()).slice(0,10);
+  if (L.student_id){
+    const s = data.students.find(x=>String(x.id)===String(L.student_id));
+    const starts = (data.packages||[]).filter(p=>p.start && s && (s.hubs||[]).some(h=>h.id===p.id)).map(p=>String(p.start).slice(0,10)).filter(d=>d <= monthEnd).sort();
+    if (starts.length) anchor = starts[starts.length-1];
+  }
+  if (anchor > monthEnd) return null;
+  let st = anchor; while (addMonths(st, 3) <= monthStart) st = addMonths(st, 3);
+  if (L.end_date && String(L.end_date).slice(0,10) < st) return null;
+  return {start: st, end: addDays(addMonths(st, 3), -1)};
+}
+function lessonMonth(L){
+  const y = lessonsMonth.y, m = lessonsMonth.m, pp = prepaid(L), per = pp ? periodFor(L, y, m) : null;
+  const key = pp ? (per ? per.start.slice(0,7) : ymOf(y, m)) : ymOf(y, m), id = `${L.id}:${key}`;
+  const rec = (data.lessonMonths||[]).find(r=>r.id===id) || {id, lesson_id:L.id, month:key, classes:null, cancelled:0, paid:false, settled:false};
+  const from = pp ? (per ? isoDayNo(per.start) : 1) : dayNo(y, m, 1), to = pp ? (per ? isoDayNo(per.end) : 0) : dayNo(y, m+1, 0);
+  const planned = pp ? (per ? countLessons(L, from, to) : 0) : plannedClasses(L, y, m);
+  let cancelled = Number(rec.cancelled)||0;
+  if (!cancelled && rec.classes!==null && rec.classes!==undefined) cancelled = Math.max(0, planned - Number(rec.classes));   /* older records */
+  cancelled = Math.min(cancelled, planned);
+  const classes = planned - cancelled;
+  const soFar = Math.max(0, Math.min(classes, countLessons(L, from, Math.min(to, todayNo())) - cancelled));
+  const price = lessonPrice(L), cutEach = L.teacher!==L.collector ? (Number(L.partner_cut)||0) : 0;
+  const due = classes * price, cut = classes * cutEach;
+  const startsNow = pp && per && per.start.slice(0,7)===ymOf(y, m), paidBy = pp && per && isoDayNo(per.start) <= todayNo();
+  return {rec, per, startsNow, paidBy, planned, cancelled, classes, soFar, due, cut, share: due - cut,
+          dueSoFar: pp ? (paidBy ? due : 0) : soFar*price, cutSoFar: pp ? (paidBy ? cut : 0) : soFar*cutEach, shareSoFar: pp ? (paidBy ? due-cut : 0) : soFar*(price-cutEach)};
+}
+const lessonStudentName = L => { const s = L.student_id && data.students.find(x=>String(x.id)===String(L.student_id)); return s ? s.name : L.student_name; };
+function lessonPlanText(L){
+  const pw = Number(L.per_week)||1, freq = pw===0.5 ? 'every other week' : pw===1 ? 'once a week' : pw===2 ? 'twice a week' : `${pw}× a week`;
+  const days = lessonDays(L).length ? lessonDays(L) : [startWeekday(L)], dayTxt = ' · ' + WEEKDAYS.filter(w=>days.includes(w[0])).map(w=>({Mon:'Mondays',Tue:'Tuesdays',Wed:'Wednesdays',Thu:'Thursdays',Fri:'Fridays',Sat:'Saturdays',Sun:'Sundays'})[w[1]]).join(', ');
+  const price = L.unit==='hour' ? `${fmtFt(L.rate)}/hour${Number(L.hours)!==1 ? ` × ${String(L.hours).replace('.',',')} h` : ''}` : `${fmtFt(L.rate)}/lesson`;
+  return `${freq}${dayTxt} · ${price}`;
+}
+function lessonsMonthLabel(){ return new Date(lessonsMonth.y, lessonsMonth.m, 1).toLocaleDateString('en-GB', {month:'long', year:'numeric'}); }
+
+function renderLessons(){
+  const box = $('lessonsBody'); if (!box) return;
+  $('lessonsTools').innerHTML = `<div class="period"><button type="button" class="btn-icon" data-lessons="prev" aria-label="Previous month">‹</button><b>${esc(lessonsMonthLabel())}</b><button type="button" class="btn-icon" data-lessons="next" aria-label="Next month">›</button></div>`;
+  if (!lessonsReady){ box.innerHTML = `<p class="warn">To track lessons and payments, run <b>learning-hub-lessons.sql</b> once in Supabase (SQL Editor → New query → paste → Run), then reload this page.</p>`; return; }
+  const me = meId(), y = lessonsMonth.y, m = lessonsMonth.m;
+  const all = (data.lessons||[]).filter(L=>(L.teacher===me || L.collector===me) && (prepaid(L) ? !!periodFor(L, y, m) : lessonActive(L, y, m)))
+    .map(L=>({L, ...lessonMonth(L)})).sort((a,b)=>lessonStudentName(a.L).localeCompare(lessonStudentName(b.L), 'hu'));
+  const P = all.filter(x=>prepaid(x.L)), Mo = all.filter(x=>!prepaid(x.L));
+  const A = Mo.filter(x=>x.L.teacher===me && x.L.collector===me);
+  const B = Mo.filter(x=>x.L.teacher===me && x.L.collector!==me);
+  const C = Mo.filter(x=>x.L.teacher!==me && x.L.collector===me);
+  /* prepaid 3-month lessons count as income in the month the period starts */
+  const PA = P.filter(x=>x.L.teacher===me && x.L.collector===me), PB = P.filter(x=>x.L.teacher===me && x.L.collector!==me), PC = P.filter(x=>x.L.teacher!==me && x.L.collector===me);
+  const now = a => a.filter(x=>x.startsNow);
+  const sum = (a, f) => a.reduce((t,x)=>t + f(x), 0);
+  const today = new Date(), cur = today.getFullYear()===y && today.getMonth()===m, past = new Date(y, m+1, 1) <= today;
+  const soFarLbl = past ? 'whole month' : cur ? `until ${today.toLocaleDateString('en-GB',{day:'numeric', month:'short'})}` : 'month not started yet';
+  const cards = [['This month', fmtFt(sum(A, x=>x.due) + sum(B, x=>x.share) + sum(C, x=>x.cut) + sum(now(PA), x=>x.due) + sum(now(PB), x=>x.share) + sum(now(PC), x=>x.cut)), `${plural(sum(A.concat(B), x=>x.classes), 'monthly lesson')}${now(P).length ? ' + prepaid packages' : ''}`],
+    ['Earned so far', fmtFt(sum(A, x=>x.dueSoFar) + sum(B, x=>x.shareSoFar) + sum(C, x=>x.cutSoFar) + sum(now(PA), x=>x.dueSoFar) + sum(now(PB), x=>x.shareSoFar) + sum(now(PC), x=>x.cutSoFar)), soFarLbl]];
+  const BB = B.concat(now(PB)), CC = C.concat(now(PC));
+  if (BB.length) cards.push([`From ${[...new Set(BB.map(x=>whoName(x.L.collector)))].join(' / ')} (mutual)`, fmtFt(sum(BB, x=>x.share)), now(PB).length ? 'prepaid 3-month lessons included' : `so far: ${fmtFt(sum(BB, x=>x.shareSoFar))}`]);
+  if (CC.length) cards.push([`To send to ${[...new Set(CC.map(x=>whoName(x.L.teacher)))].join(' / ')}`, fmtFt(sum(CC, x=>x.share)), now(PC).length ? 'prepaid 3-month lessons included' : `so far: ${fmtFt(sum(CC, x=>x.shareSoFar))}`]);
+  const num = n => esc(String(n).replace('.',','));
+  const counter = x => `<div class="lcount"><button type="button" class="btn-icon" data-lessons="minus" data-id="${esc(x.L.id)}" aria-label="One cancelled lesson less" ${x.cancelled<=0?'disabled':''}>−</button><b>${num(x.cancelled)}</b><button type="button" class="btn-icon" data-lessons="plus" data-id="${esc(x.L.id)}" aria-label="One more cancelled lesson" ${x.cancelled>=x.planned?'disabled':''}>+</button></div>`;
+  const editBtn = x => `<button type="button" class="btn-icon" data-lessons="edit" data-id="${esc(x.L.id)}" aria-label="Edit ${esc(lessonStudentName(x.L))}" title="Edit">${icon('edit')}</button>`;
+  const who = x => `<td>${esc(lessonStudentName(x.L))}<small>${esc(lessonPlanText(x.L))}</small></td>`;
+  const lessonsCell = x => `<td class="num">${num(x.classes)}${x.cancelled ? `<small>${num(x.planned)} planned</small>` : ''}</td>`;
+  const table = (rows, kind, pre) => {
+    if (!rows.length) return '';
+    const split = kind!=='A', other = kind==='B' ? whoName(rows[0].L.collector) : kind==='C' ? whoName(rows[0].L.teacher) : '';
+    const head = `<th>Student</th>${pre ? '<th>3-month period</th>' : ''}<th class="num">Lessons</th><th>Cancelled</th>${pre ? '' : '<th class="num">Held so far</th>'}<th class="num">${pre ? 'Prepaid' : 'Amount'}</th>${split ? (kind==='B' ? `<th class="num">${esc(other)} keeps</th><th class="num">My share</th>` : `<th class="num">You keep</th><th class="num">${esc(other)}'s share</th>`) : (pre ? '' : '<th class="num">Earned so far</th>')}<th></th>`;
+    const body = rows.map(x=>`<tr>${who(x)}${pre ? `<td>${esc(fmtDate(x.per.start))} – ${esc(fmtDate(x.per.end))}${x.startsNow ? '<small>starts this month</small>' : ''}</td>` : ''}${lessonsCell(x)}<td>${counter(x)}</td>${pre ? '' : `<td class="num">${num(x.soFar)}</td>`}<td class="num">${esc(fmtFt(x.due))}</td>
+      ${split ? `<td class="num">${esc(fmtFt(x.cut))}</td><td class="num">${esc(fmtFt(x.share))}</td>` : (pre ? '' : `<td class="num">${esc(fmtFt(x.dueSoFar))}</td>`)}
+      <td>${editBtn(x)}</td></tr>`).join('');
+    const foot = `<tr><td${pre ? ' colspan="2"' : ''}>Total</td><td class="num">${num(sum(rows, x=>x.classes))}</td><td>${num(sum(rows, x=>x.cancelled))}</td>${pre ? '' : `<td class="num">${num(sum(rows, x=>x.soFar))}</td>`}<td class="num">${esc(fmtFt(sum(rows, x=>x.due)))}</td>${split ? `<td class="num">${esc(fmtFt(sum(rows, x=>x.cut)))}</td><td class="num">${esc(fmtFt(sum(rows, x=>x.share)))}</td>` : (pre ? '' : `<td class="num">${esc(fmtFt(sum(rows, x=>x.dueSoFar)))}</td>`)}<td></td></tr>`;
+    return `<div class="table-wrap"><table class="sales lessons"><thead><tr>${head}</tr></thead><tbody>${body}</tbody><tfoot>${foot}</tfoot></table></div>`;
+  };
+  const preGroups = [[PA,'A'],[PB,'B'],[PC,'C']].filter(g=>g[0].length).map(([rows, kind])=>{
+    const by = kind==='B' ? [...new Set(rows.map(x=>x.L.collector))] : kind==='C' ? [...new Set(rows.map(x=>x.L.teacher))] : [null];
+    return by.map(w=>{ const r = w ? rows.filter(x=>(kind==='B' ? x.L.collector : x.L.teacher)===w) : rows;
+      const title = kind==='A' ? 'My students – prepaid 3-month packages' : kind==='B' ? `Mutual students – prepaid 3-month packages, ${esc(whoName(w))} collects` : `${esc(whoName(w))}'s lessons – prepaid 3-month packages, you collect`;
+      const hint = kind==='B' ? `They prepay their lessons together with the digital material for 3 months. ${esc(whoName(w))} takes the money, keeps her part and sends you the rest. The lessons are counted from the calendar for the whole period.`
+        : kind==='C' ? `They prepay their lessons together with the digital material for 3 months. You take the money, keep your part and send ${esc(whoName(w))} her share.`
+        : 'They prepay their lessons for 3 months; the lessons are counted from the calendar for the whole period.';
+      return `<h3 class="section-title">${title}</h3><p class="hint">${hint}</p>${table(r, kind, true)}`; }).join('');
+  }).join('');
+  const groupB = [...new Set(B.map(x=>x.L.collector))].map(c=>`<h3 class="section-title">Mutual students – ${esc(whoName(c))} collects</h3>
+      <p class="hint">${esc(whoName(c))} takes the money from the student, keeps her part and sends you the rest.</p>${table(B.filter(x=>x.L.collector===c), 'B')}`).join('');
+  const groupC = [...new Set(C.map(x=>x.L.teacher))].map(t=>`<h3 class="section-title">${esc(whoName(t))}'s lessons – you collect</h3>
+      <p class="hint">You take the money from the student, keep your part and send ${esc(whoName(t))} her share.</p>${table(C.filter(x=>x.L.teacher===t), 'C')}`).join('');
+  box.innerHTML = `<div class="sum-cards">${cards.map(c=>`<div class="sum-card"><span>${esc(c[0])}</span><b>${esc(c[1])}</b>${c[2]?`<small>${esc(c[2])}</small>`:''}</div>`).join('')}</div>
+    <h3 class="section-title">My students</h3>
+    ${A.length ? table(A, 'A') : `<p class="hint">No students paying monthly in ${esc(lessonsMonthLabel())}. Add one with <b>Add student</b>.</p>`}
+    ${groupB}${groupC}${preGroups}
+    <p class="hint">Lessons are counted automatically from the calendar, on the weekday of each student's first lesson. The only thing to change by hand: if a lesson is cancelled, press <b>+</b> under <b>Cancelled</b>.</p>`;
+}
+function shiftLessonsMonth(dir){ const d = new Date(lessonsMonth.y, lessonsMonth.m + dir, 1); lessonsMonth = {y:d.getFullYear(), m:d.getMonth()}; renderLessons(); }
+async function saveLessonMonth(id, change){
+  const L = (data.lessons||[]).find(x=>x.id===id); if (!L) return;
+  const cur = lessonMonth(L), row = {id:cur.rec.id, lesson_id:L.id, month:cur.rec.month, classes:null, cancelled:cur.cancelled, paid:!!cur.rec.paid, settled:!!cur.rec.settled, ...change};
+  try { await q(sb.from('hub_lesson_months').upsert(row)); } catch(e){ renderLessons(); return; }
+  data.lessonMonths = (data.lessonMonths||[]).filter(r=>r.id!==row.id).concat([row]);
+  renderLessons();
+}
+function stepLessons(id, d){
+  const L = (data.lessons||[]).find(x=>x.id===id); if (!L) return;
+  const cur = lessonMonth(L);
+  saveLessonMonth(id, {cancelled: Math.max(0, Math.min(cur.planned, cur.cancelled + d))});
+}
+/* add / edit a student's lesson plan */
+function openLesson(id){
+  const L = id ? (data.lessons||[]).find(x=>x.id===id) : null, me = meId();
+  lessonEditing = L;
+  $('mLessonTitle').textContent = L ? `Lessons – ${lessonStudentName(L)}` : 'Add a student';
+  const studs = data.students.slice().sort((a,b)=>a.name.localeCompare(b.name, 'hu'));
+  $('lStudent').innerHTML = `<option value="">— choose a student —</option>` + studs.map(s=>`<option value="${esc(s.id)}">${esc(s.name)}</option>`).join('') + `<option value="__name">Someone else (type a name)</option>`;
+  const sid = L && L.student_id && studs.some(s=>String(s.id)===String(L.student_id)) ? String(L.student_id) : (L ? '__name' : '');
+  $('lStudent').value = sid; $('lName').value = L ? L.student_name : '';
+  const opts = [['me', ROLE==='owner' ? 'My student – I teach and collect the money' : 'My student – I teach and collect the money']];
+  if (ROLE==='owner') PARTNERS.forEach(p=>opts.push(['mut:'+p.email, `Mutual student – I teach, ${p.name} collects the money`]));
+  else opts.push(['mut:owner', `Mutual student – ${ownerName()} teaches, I collect the money`]);
+  $('lWho').innerHTML = opts.map(o=>`<option value="${esc(o[0])}">${esc(o[1])}</option>`).join('');
+  $('lWho').value = !L || (L.teacher===L.collector) ? 'me' : (ROLE==='owner' ? 'mut:'+L.collector : 'mut:owner');
+  $('lWhoWrap').hidden = opts.length < 2;
+  $('lRate').value = L ? L.rate : ''; $('lUnit').value = L ? L.unit : 'lesson'; $('lHours').value = L ? String(L.hours) : '1';
+  $('lCut').value = L ? (L.partner_cut || 1000) : 1000;
+  $('lPerWeek').value = L ? String(Number(L.per_week)) : '1';
+  $('lBilling').value = L && L.billing==='bundle3' ? 'bundle3' : 'monthly';
+  $('lStart').value = L ? String(L.start_date||'').slice(0,10) : isoOf(new Date());
+  $('lEnd').value = L && L.end_date ? String(L.end_date).slice(0,10) : '';
+  const locked = !!L && L.teacher!==me;            /* her share of your lessons: prices are yours to set */
+  ['lWho','lRate','lUnit','lHours','lCut','lBilling'].forEach(k=>{ $(k).disabled = locked; });
+  $('lDelete').hidden = !L || L.teacher!==me;
+  lessonFormChanged(); $('lErr').textContent = '';
+  openModal('mLesson');
+}
+function lessonFormChanged(){
+  $('lNameWrap').hidden = $('lStudent').value!=='__name';
+  $('lHoursWrap').hidden = $('lUnit').value!=='hour';
+  const w = $('lWho').value, mut = w.startsWith('mut:');
+  $('lCutWrap').hidden = !mut;
+  if (mut) $('lCutLabel').textContent = ROLE==='owner' ? `${whoName(w.slice(4))} keeps per lesson (Ft)` : 'I keep per lesson (Ft)';
+  const pw = Number($('lPerWeek').value), v = $('lStart').value;
+  const wd = v ? new Date(v+'T00:00:00').toLocaleDateString('en-GB', {weekday:'long'}) : '';
+  $('lBillHint').textContent = $('lBilling').value==='bundle3' ? 'The 3-month periods follow the student\'s 3-month bundle start date (or the first lesson date if there is no bundle).' : '';
+  $('lDaysHint').textContent = !wd ? '' : pw===0.5 ? `Counted automatically: every other ${wd}.` : pw===1 ? `Counted automatically: every ${wd}.` : `Counted automatically: ${pw} lessons in every week (each ${wd} counts as a week).`;
+}
+async function saveLesson(e){
+  e.preventDefault();
+  const me = meId(), L = lessonEditing, sv = $('lStudent').value;
+  const st = sv && sv!=='__name' ? data.students.find(s=>String(s.id)===sv) : null;
+  const name = st ? st.name : $('lName').value.trim();
+  if (!name){ $('lErr').textContent = 'Choose a student or type a name.'; return; }
+  const w = $('lWho').value;
+  let teacher = me, collector = me;
+  if (w.startsWith('mut:')){ if (ROLE==='owner') collector = w.slice(4); else teacher = 'owner'; }
+  if (L && L.teacher!==me){ teacher = L.teacher; collector = L.collector; }
+  const row = {id: L ? L.id : uid('les'), student_id: st ? String(st.id) : null, student_name: name, teacher, collector,
+    rate: Number($('lRate').value)||0, unit: $('lUnit').value, hours: Number($('lHours').value)||1,
+    partner_cut: teacher!==collector ? (Number($('lCut').value)||0) : 0, per_week: Number($('lPerWeek').value)||1,
+    days: '', billing: $('lBilling').value,
+    start_date: $('lStart').value || isoOf(new Date()), end_date: $('lEnd').value || null};
+  if (L && L.teacher!==me){ ['rate','unit','hours','partner_cut','billing'].forEach(k=>{ row[k] = L[k]; }); }
+  busy(e.submitter, true);
+  try { await q(sb.from('hub_lessons').upsert(row)); } catch(err){ busy(e.submitter, false); return; }
+  busy(e.submitter, false);
+  data.lessons = (data.lessons||[]).filter(x=>x.id!==row.id).concat([{...(L||{}), ...row}]);
+  closeAll(); renderLessons(); toast(L ? 'Saved' : `${firstName(name)} added`);
+}
+async function deleteLesson(){
+  const L = lessonEditing; if (!L || !confirm(`Remove ${lessonStudentName(L)} from the lessons tracker, with all months? (If they only stopped, set the last lesson date instead.)`)) return;
+  try { await q(sb.from('hub_lessons').delete().eq('id', L.id)); } catch(e){ return; }
+  data.lessons = data.lessons.filter(x=>x.id!==L.id); data.lessonMonths = (data.lessonMonths||[]).filter(r=>r.lesson_id!==L.id);
+  closeAll(); renderLessons(); toast('Removed');
+}
+document.addEventListener('click', e=>{
+  const t = e.target.closest('[data-lessons],[data-action="lesson-new"],#lDelete'); if (!t) return;
+  if (t.id==='lDelete'){ deleteLesson(); return; }
+  if (t.dataset.action==='lesson-new'){ openLesson(); return; }
+  const a = t.dataset.lessons, id = t.dataset.id;
+  if (a==='prev') shiftLessonsMonth(-1);
+  else if (a==='next') shiftLessonsMonth(1);
+  else if (a==='minus') stepLessons(id, -1);
+  else if (a==='plus') stepLessons(id, 1);
+  else if (a==='edit') openLesson(id);
+});
+document.addEventListener('change', e=>{
+  const t = e.target;
+  if (t.dataset.lessonPaid) saveLessonMonth(t.dataset.lessonPaid, {paid: t.checked});
+  else if (t.dataset.lessonSettled) saveLessonMonth(t.dataset.lessonSettled, {settled: t.checked});
+  else if (t.closest && t.closest('#lessonForm')) lessonFormChanged();
+});
+document.addEventListener('input', e=>{ if (e.target.id==='lStart') lessonFormChanged();
+});
+document.addEventListener('submit', e=>{ if (e.target.id==='lessonForm') saveLesson(e); });
+
 /* ================= navigation ================= */
-const VIEWS = ['library','hubs','students','diary','compositions','folder','sales'];
+const VIEWS = ['library','hubs','students','diary','compositions','folder','sales','lessons'];
 function go(v){
   if (v!=='library' && selecting){ selecting = false; selected = new Set(); updateSelBar(); }
   view = v;
@@ -2309,6 +2601,7 @@ function go(v){
   if (v==='compositions') renderInbox();
   if (v==='folder') renderFolder();
   if (v==='sales') renderSales();
+  if (v==='lessons') renderLessons();
 }
 function rerender(){ updateCounts(); go(view); }
 
