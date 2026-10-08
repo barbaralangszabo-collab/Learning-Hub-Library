@@ -788,7 +788,7 @@ body.partner-mode [data-action="move-local"], body.partner-mode .owner-only{disp
 .sales-tools .period{display:flex;align-items:center;gap:6px;font-family:var(--ui);font-size:1.05rem}
 .sales-tools .period .btn-icon{font-size:1.4rem;line-height:1}
 .sales-tools select{font-family:var(--ui);padding:8px 12px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
-.sum-cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:10px 0}
+.sum-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:10px 0}
 .sum-card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:2px;font-family:var(--ui)}
 .sum-card span{font-size:.8rem;color:var(--ink-soft);font-weight:700}
 .sum-card b{font-size:1.45rem;color:var(--ink)}
@@ -972,7 +972,7 @@ body.partner-mode .date-btn .chg{display:none}
           <button class="btn btn-outline" data-action="sales-export"><svg class="i"><use href="#i-down"/></svg>Download (CSV)</button>
           <button class="btn btn-outline owner-only" data-action="sales-settings">⚙️ Prices &amp; partners</button>
           <button class="btn btn-primary" data-action="sales-new"><svg class="i"><use href="#i-plus"/></svg>Record sale</button></div></div>
-      <p class="note-box">Every bundle, project or professional package sold, with the commission. Both teachers see the same summary of the partner's sales. Tick <b>Student paid</b> when the money has arrived and <b>Settled</b> when the share has been transferred.</p>
+      <p class="note-box" id="salesIntro">Every bundle, project or professional package sold, with the commission. </p>
     </div>
     <div class="sales-tools" id="salesTools"></div>
     <div id="salesBody"></div>
@@ -1165,9 +1165,6 @@ body.partner-mode .date-btn .chg{display:none}
         <div class="field"><label for="setPPro">Professional English (Ft)</label><input id="setPPro" type="number" min="0" step="500"></div>
       </div>
       <div class="fields-3">
-        <div class="field"><label for="setCollects">Who collects the payments?</label><select id="setCollects">
-          <option value="partner">The partner – she transfers my share</option>
-          <option value="owner">I do – I pay her commission</option></select></div>
         <div class="field"><label for="setOwnerName">Your name (on notes &amp; sheets)</label><input id="setOwnerName"></div>
       </div>
       <div class="field"><label for="setDemo">Demo link on product sheets</label><input id="setDemo" type="url"></div>
@@ -1868,7 +1865,8 @@ function saleProductChanged(){
 function updateSaleCommission(){
   const price = Number($('salePrice').value)||0;
   const rate = ROLE==='partner' ? (ME_ROW ? Number(ME_ROW.commission) : 0) : ($('saleSeller').value==='owner' ? 0 : Number((partnerOf($('saleSeller').value)||{}).commission||0));
-  $('saleComm').textContent = rate ? `Commission (${Math.round(rate*100)}%): ${fmtFt(Math.round(price*rate))}` : '';
+  const keep = Math.round(price*rate), pn = ROLE==='partner' ? 'You keep' : `${(partnerOf($('saleSeller').value)||{}).name || 'Partner'} keeps`;
+  $('saleComm').textContent = rate ? `${pn} ${Math.round(rate*100)}%: ${fmtFt(keep)} · ${ownerName()}'s share: ${fmtFt(price-keep)}` : '';
 }
 async function saveSale(e){
   e.preventDefault();
@@ -1899,7 +1897,7 @@ async function saveSale(e){
 }
 
 /* ================= sales summary ================= */
-let salesPeriod = (()=>{ const d = new Date(); return {mode:'month', y:d.getFullYear(), m:d.getMonth()}; })(), salesSeller = 'ALL';
+let salesPeriod = (()=>{ const d = new Date(); return {mode:'month', y:d.getFullYear(), m:d.getMonth()}; })();
 function periodRange(){
   const {mode, y, m} = salesPeriod, m0 = mode==='quarter' ? Math.floor(m/3)*3 : m, len = mode==='quarter' ? 3 : 1;
   const from = new Date(y, m0, 1), to = new Date(y, m0+len, 1);
@@ -1912,52 +1910,73 @@ function shiftPeriod(dir){ const step = salesPeriod.mode==='quarter' ? 3 : 1; co
 function salesRows(){
   const r = periodRange();
   return data.sales.filter(x=>String(x.sale_date) >= r.from && String(x.sale_date) < r.to)
-    .filter(x=>ROLE!=='owner' || salesSeller==='ALL' || x.seller===salesSeller);
+    .filter(x=>ROLE==='owner' || !ME || String(x.seller).toLowerCase()===String(ME).toLowerCase());
 }
 const commOf = x => Math.round((Number(x.price)||0) * (Number(x.commission_rate)||0));
+function salesTable(rows, opt){
+  const isP = ROLE==='partner', comm = opt.comm, total = rows.reduce((a,x)=>a+(Number(x.price)||0), 0), cTot = rows.reduce((a,x)=>a+commOf(x), 0);
+  if (!rows.length) return `<p class="hint">${esc(opt.empty)}</p>`;
+  return `<div class="table-wrap"><table class="sales">
+    <thead><tr><th>Date</th><th>Student</th><th>Product</th><th class="num">Price</th>${comm?`<th class="num">${isP?'You keep':esc(opt.who)+' keeps'}</th><th class="num">${isP?esc(ownerName())+"'s share":'My share'}</th>`:''}<th>Student paid</th>${comm?`<th>${isP?'Share sent':'Share received'}</th>`:''}<th></th></tr></thead>
+    <tbody>${rows.map(x=>`<tr>
+      <td>${esc(fmtDate(x.sale_date))}</td><td>${esc(x.student_name)}</td>
+      <td>${esc(x.item_title)}<small>${esc([PRODUCT_LABEL[x.product]!==x.item_title ? PRODUCT_LABEL[x.product] : '', x.note].filter(Boolean).join(' · '))}</small></td>
+      <td class="num">${esc(fmtFt(x.price))}</td>${comm?`<td class="num">${commOf(x) ? esc(fmtFt(commOf(x))) : '–'}</td><td class="num">${esc(fmtFt((Number(x.price)||0)-commOf(x)))}</td>`:''}
+      <td><label class="tick"><input type="checkbox" data-sale-paid="${esc(x.id)}" ${x.student_paid?'checked':''}><span class="sr">Paid by student</span></label></td>
+      ${comm?`<td>${isP ? (x.settled ? '✓' : 'open') : `<label class="tick"><input type="checkbox" data-sale-settled="${esc(x.id)}" ${x.settled?'checked':''}><span class="sr">Share received</span></label>`}</td>`:''}
+      <td>${(!isP || !x.settled) ? `<button type="button" class="btn-icon del" data-sales="del" data-id="${esc(x.id)}" aria-label="Delete sale" title="Delete">${icon('trash')}</button>` : ''}</td></tr>`).join('')}</tbody>
+    <tfoot><tr><td colspan="3">Total · ${esc(plural(rows.length,'sale'))}</td><td class="num">${esc(fmtFt(total))}</td>${comm?`<td class="num">${esc(fmtFt(cTot))}</td><td class="num">${esc(fmtFt(total-cTot))}</td>`:''}<td colspan="${comm?3:2}"></td></tr></tfoot>
+  </table></div>`;
+}
 function renderSales(){
   const box = $('salesBody'); if (!box) return;
   if (!partnerReady){ box.innerHTML = `<p class="warn">To use sales, notes and the partner login, run <b>learning-hub-partner-setup.sql</b> once in Supabase (SQL Editor → New query → paste → Run), then reload this page.</p>`; return; }
-  const r = periodRange(), rows = salesRows();
-  const total = rows.reduce((a,x)=>a+(Number(x.price)||0), 0), comm = rows.reduce((a,x)=>a+commOf(x), 0);
-  const pRows = rows.filter(x=>x.seller!=='owner'), open = pRows.filter(x=>!x.settled);
-  const collects = HUBSET.collects==='owner' ? 'owner' : 'partner';
-  const openAmt = open.reduce((a,x)=>a + (collects==='partner' ? (Number(x.price)||0) - commOf(x) : commOf(x)), 0);
-  const isP = ROLE==='partner', pName = isP ? (ME_ROW ? ME_ROW.name : 'You') : partnerNames();
-  const balance = !pRows.length ? 'Nothing to settle in this period.' : collects==='partner'
-    ? `${esc(pName)} collects the payments and transfers ${esc(ownerName())}'s share: <b>${esc(fmtFt(openAmt))}</b> still to transfer.`
-    : `${esc(ownerName())} collects the payments and pays the commission: <b>${esc(fmtFt(openAmt))}</b> still to pay ${isP ? 'you' : esc(pName)}.`;
-  const showSeller = !isP && salesSeller==='ALL' && PARTNERS.length;
+  const r = periodRange(), rows = salesRows(), isP = ROLE==='partner';
+  const sum = a => a.reduce((t,x)=>t+(Number(x.price)||0), 0), csum = a => a.reduce((t,x)=>t+commOf(x), 0);
+  const paid = a => `${a.filter(x=>x.student_paid).length} / ${a.length}`;
+  const openOf = a => a.filter(x=>!x.settled).reduce((t,x)=>t + (Number(x.price)||0) - commOf(x), 0);
+  const balanceOf = (a, name) => !a.length ? '' : isP
+    ? `You collect the payments and send ${esc(ownerName())} her share: <b>${esc(fmtFt(openOf(a)))}</b> still to send.`
+    : `${esc(name)} collects the payments and sends you your share: <b>${esc(fmtFt(openOf(a)))}</b> still to receive.`;
+  const cardsHTML = cards => `<div class="sum-cards">${cards.map(c=>`<div class="sum-card"><span>${esc(c[0])}</span><b>${esc(c[1])}</b>${c[2]?`<small>${esc(c[2])}</small>`:''}</div>`).join('')}</div>`;
   $('salesTools').innerHTML = `<div class="seg" role="group" aria-label="Period">
       <button type="button" data-sales="mode" data-mode="month" aria-pressed="${salesPeriod.mode==='month'}">Month</button>
       <button type="button" data-sales="mode" data-mode="quarter" aria-pressed="${salesPeriod.mode==='quarter'}">3 months</button></div>
-    <div class="period"><button type="button" class="btn-icon" data-sales="prev" aria-label="Previous period">‹</button><b>${esc(r.label)}</b><button type="button" class="btn-icon" data-sales="next" aria-label="Next period">›</button></div>
-    ${!isP && PARTNERS.length ? `<select id="salesSellerSel" aria-label="Whose sales">
-      <option value="ALL" ${salesSeller==='ALL'?'selected':''}>All sales</option>
-      ${PARTNERS.map(p=>`<option value="${esc(p.email)}" ${salesSeller===p.email?'selected':''}>${esc(p.name)}'s sales</option>`).join('')}
-      <option value="owner" ${salesSeller==='owner'?'selected':''}>My own sales</option></select>` : ''}`;
-  const cards = isP
-    ? [['Your sales', fmtFt(total), plural(rows.length,'sale')], [`Your commission`, fmtFt(comm), `${Math.round((ME_ROW?Number(ME_ROW.commission):0)*100)}% of each sale`], [`${ownerName()}'s share`, fmtFt(total-comm), ''], ['Paid by students', `${rows.filter(x=>x.student_paid).length} / ${rows.length}`, '']]
-    : [['Sales', fmtFt(total), plural(rows.length,'sale')], ['Partner commission', fmtFt(comm), pRows.length ? plural(pRows.length,'partner sale') : ''], ['Your share', fmtFt(total-comm), ''], ['Paid by students', `${rows.filter(x=>x.student_paid).length} / ${rows.length}`, '']];
-  box.innerHTML = `<div class="sum-cards">${cards.map(c=>`<div class="sum-card"><span>${esc(c[0])}</span><b>${esc(c[1])}</b>${c[2]?`<small>${esc(c[2])}</small>`:''}</div>`).join('')}</div>
-    <p class="note-box balance">${balance}</p>
-    ${rows.length ? `<div class="table-wrap"><table class="sales">
-      <thead><tr><th>Date</th><th>Student</th><th>Product</th>${showSeller?'<th>Sold by</th>':''}<th class="num">Price</th><th class="num">Commission</th><th>Student paid</th><th>Settled</th><th></th></tr></thead>
-      <tbody>${rows.map(x=>`<tr>
-        <td>${esc(fmtDate(x.sale_date))}</td><td>${esc(x.student_name)}</td>
-        <td>${esc(x.item_title)}<small>${esc([PRODUCT_LABEL[x.product]!==x.item_title ? PRODUCT_LABEL[x.product] : '', x.note].filter(Boolean).join(' · '))}</small></td>
-        ${showSeller?`<td>${esc(sellerName(x))}</td>`:''}
-        <td class="num">${esc(fmtFt(x.price))}</td><td class="num">${commOf(x) ? esc(fmtFt(commOf(x))) : '–'}</td>
-        <td><label class="tick"><input type="checkbox" data-sale-paid="${esc(x.id)}" ${x.student_paid?'checked':''}><span class="sr">Paid by student</span></label></td>
-        <td>${x.seller==='owner' ? '–' : (isP ? (x.settled ? '✓' : 'open') : `<label class="tick"><input type="checkbox" data-sale-settled="${esc(x.id)}" ${x.settled?'checked':''}><span class="sr">Commission settled</span></label>`)}</td>
-        <td>${(!isP || !x.settled) ? `<button type="button" class="btn-icon del" data-sales="del" data-id="${esc(x.id)}" aria-label="Delete sale" title="Delete">${icon('trash')}</button>` : ''}</td></tr>`).join('')}</tbody>
-      <tfoot><tr><td colspan="${showSeller?4:3}">Total</td><td class="num">${esc(fmtFt(total))}</td><td class="num">${esc(fmtFt(comm))}</td><td colspan="3"></td></tr></tfoot>
-    </table></div>` : `<div class="empty"><h3>No sales in ${esc(r.label)}</h3><p>Record a sale from a student's card, or with the button above.</p></div>`}
+    <div class="period"><button type="button" class="btn-icon" data-sales="prev" aria-label="Previous period">‹</button><b>${esc(r.label)}</b><button type="button" class="btn-icon" data-sales="next" aria-label="Next period">›</button></div>`;
+  let html;
+  if (isP){
+    const b = balanceOf(rows, ME_ROW ? ME_ROW.name : 'You');
+    html = cardsHTML([['Your sales', fmtFt(sum(rows)), plural(rows.length,'sale')],
+        ['You keep', fmtFt(csum(rows)), `${Math.round((ME_ROW?Number(ME_ROW.commission):0)*100)}% of each sale`],
+        [`${ownerName()}'s share`, fmtFt(sum(rows)-csum(rows)), `still to send: ${fmtFt(openOf(rows))}`],
+        ['Paid by students', paid(rows), '']])
+      + (b ? `<p class="note-box balance">${b}</p>` : '')
+      + salesTable(rows, {comm:true, who:'You', empty:`No sales in ${r.label}. Record a sale from a student's card, or with the button above.`});
+  } else {
+    const mine = rows.filter(x=>x.seller==='owner');
+    const known = PARTNERS.map(p=>({name:p.name || p.email, rows:rows.filter(x=>x.seller===p.email)}));
+    const others = rows.filter(x=>x.seller!=='owner' && !PARTNERS.some(p=>p.email===x.seller));
+    if (others.length) known.push({name:'Former partners', rows:others});
+    const pAll = rows.filter(x=>x.seller!=='owner'), pLabel = PARTNERS.length===1 ? (PARTNERS[0].name || 'Partner') : 'Partners';
+    html = cardsHTML([['Total sales', fmtFt(sum(rows)), plural(rows.length,'sale')],
+        [`${pLabel}'s sales`.replace("Partners's","Partners'"), fmtFt(sum(pAll)), `${plural(pAll.length,'sale')} · my share ${fmtFt(sum(pAll)-csum(pAll))}`],
+        ['My sales', fmtFt(sum(mine)), plural(mine.length,'sale')],
+        ['Still to receive', fmtFt(openOf(pAll)), `my income in total: ${fmtFt(sum(rows)-csum(pAll))}`]])
+      + known.map(k=>{ const b = balanceOf(k.rows, k.name);
+          return `<h3 class="section-title">${esc(k.name)}'s sales</h3>${b?`<p class="note-box balance">${b}</p>`:''}`
+            + salesTable(k.rows, {comm:true, who:k.name, empty:`${k.name} has no sales in ${r.label}.`}); }).join('')
+      + `<h3 class="section-title">My sales</h3>` + salesTable(mine, {comm:false, empty:`You have no sales in ${r.label}.`});
+  }
+  box.innerHTML = html + `
     <h3 class="section-title">Product sheets</h3>
     <p class="hint">A short, ready-to-send description of each product, in Hungarian or English. Copy it into an email or Messenger, or save it as a PDF.</p>
     <div class="prod-grid">${products().map(p=>`<article class="panel prod">
       <h4>${esc(p.title)}</h4><span class="meta">${esc(PRODUCT_LABEL[p.type])} · ${esc(fmtFt(p.price))}${p.links.length>1?' · '+plural(p.links.length,'app'):''}</span>
       <button type="button" class="btn btn-outline btn-sm" data-sales="sheet" data-key="${esc(p.key)}">📄 Product sheet</button></article>`).join('') || '<p class="hint">Create a 3-month bundle first.</p>'}</div>`;
+  const intro = $('salesIntro');
+  if (intro) intro.innerHTML = isP
+    ? `Your sales: every bundle, project or professional package you sold. You collect the payments, keep your part and send ${esc(ownerName())} her share. Tick <b>Student paid</b> when a student has paid you; ${esc(ownerName())} ticks <b>Share sent</b> when her share has arrived.`
+    : `Your partner's sales and your own sales, each with its own total. Your partner collects the payments for her sales and sends you your share – tick <b>Share received</b> when it has arrived.`;
 }
 async function setSaleFlag(id, field, on, input){
   const x = data.sales.find(y=>y.id===id); if (!x) return;
@@ -1972,8 +1991,8 @@ async function deleteSale(id){
 function exportSales(){
   const r = periodRange(), rows = salesRows();
   const cell = v => `"${String(v??'').replace(/"/g,'""')}"`;
-  const lines = [['Date','Student','Product','Type','Sold by','Price (HUF)','Commission rate','Commission (HUF)','Student paid','Settled','Note'].map(cell).join(';')]
-    .concat(rows.map(x=>[x.sale_date, x.student_name, x.item_title, PRODUCT_LABEL[x.product]||x.product, sellerName(x), x.price, Math.round((Number(x.commission_rate)||0)*100)+'%', commOf(x), x.student_paid?'yes':'no', x.seller==='owner'?'':(x.settled?'yes':'no'), x.note||''].map(cell).join(';')));
+  const lines = [['Date','Student','Product','Type','Sold by','Price (HUF)','Partner keeps (rate)','Partner keeps (HUF)','Owner share (HUF)','Student paid','Owner share sent','Note'].map(cell).join(';')]
+    .concat(rows.map(x=>[x.sale_date, x.student_name, x.item_title, PRODUCT_LABEL[x.product]||x.product, sellerName(x), x.price, Math.round((Number(x.commission_rate)||0)*100)+'%', commOf(x), (Number(x.price)||0)-commOf(x), x.student_paid?'yes':'no', x.seller==='owner'?'':(x.settled?'yes':'no'), x.note||''].map(cell).join(';')));
   const blob = new Blob(['﻿' + lines.join('\r\n')], {type:'text/csv;charset=utf-8'});
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `sales-${r.from.slice(0,7)}${salesPeriod.mode==='quarter'?'-3months':''}.csv`; a.click();
   setTimeout(()=>URL.revokeObjectURL(a.href), 2000);
@@ -1984,7 +2003,6 @@ function openSalesSettings(){
   const P = HUBSET.prices || HUB_DEFAULTS.prices;
   $('setOwnerName').value = ownerName();
   $('setPBundle').value = P.bundle; $('setPBaking').value = P.baking; $('setPPro').value = P.pro;
-  $('setCollects').value = HUBSET.collects==='owner' ? 'owner' : 'partner';
   $('setDemo').value = HUBSET.demo_url || HUB_DEFAULTS.demo_url;
   renderPartnerList();
   openModal('mSalesSet');
@@ -1997,7 +2015,7 @@ function renderPartnerList(){
 async function saveSalesSettings(e){
   e.preventDefault();
   const prices = {bundle:Math.round(Number($('setPBundle').value)||0), baking:Math.round(Number($('setPBaking').value)||0), pro:Math.round(Number($('setPPro').value)||0)};
-  const rows = [{key:'prices', value:prices}, {key:'collects', value:$('setCollects').value}, {key:'demo_url', value:$('setDemo').value.trim()}, {key:'owner_name', value:$('setOwnerName').value.trim() || 'Barbara'}];
+  const rows = [{key:'prices', value:prices}, {key:'collects', value:'partner'}, {key:'demo_url', value:$('setDemo').value.trim()}, {key:'owner_name', value:$('setOwnerName').value.trim() || 'Barbara'}];
   busy(e.submitter, true);
   try { await q(sb.from('hub_settings').upsert(rows)); } catch(err){ busy(e.submitter, false); return; }
   rows.forEach(r=>HUBSET[r.key] = r.value);
@@ -2164,8 +2182,7 @@ document.addEventListener('click', e=>{
 });
 document.addEventListener('change', e=>{
   const t = e.target;
-  if (t.id==='salesSellerSel'){ salesSeller = t.value; renderSales(); }
-  else if (t.dataset.salePaid) setSaleFlag(t.dataset.salePaid, 'student_paid', t.checked, t);
+  if (t.dataset.salePaid) setSaleFlag(t.dataset.salePaid, 'student_paid', t.checked, t);
   else if (t.dataset.saleSettled) setSaleFlag(t.dataset.saleSettled, 'settled', t.checked, t);
   else if (t.dataset.noteDone) setNoteDone(t.dataset.noteDone, t.checked, t);
   else if (t.id==='saleProduct') saleProductChanged();
