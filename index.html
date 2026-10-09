@@ -180,6 +180,15 @@ main{max-width:1240px;margin:0 auto;padding:22px 24px 80px}
 .panel h3{margin:0;font-family:var(--script);font-weight:700;font-size:1.7rem;line-height:1.15}
 .panel .meta{font-family:var(--ui);color:var(--ink-soft);font-weight:600;font-size:.85rem}
 .panel .notes{margin:0;color:var(--ink-soft);font-size:.92rem}
+.ready-empty{border-style:dashed;box-shadow:none;background:transparent;align-self:start}
+.ready-empty .hub-emoji{opacity:.55}
+.member button[data-ready]{border:0;background:none;cursor:pointer;padding:0 2px;font-size:.85rem;line-height:1}
+#readyTools{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:0 0 10px}
+#readyTools .hint{margin:0}
+.bnotes{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.bnotes li{display:flex;align-items:flex-start;gap:6px;background:var(--surface-2);border-radius:10px;padding:6px 6px 6px 10px;color:var(--ink-soft);font-size:.9rem;line-height:1.4}
+.bnotes li span{flex:1;white-space:pre-wrap;word-break:break-word}
+.bnotes .btn-icon{width:26px;height:26px;flex:0 0 auto}
 .link-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px;max-height:220px;overflow-y:auto}
 .link-list li{display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:10px;background:var(--sk);color:var(--sk-ink);font-family:var(--ui);font-weight:600;font-size:.86rem}
 .link-list li span.t{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -772,7 +781,7 @@ body{overflow-x:clip}
 }
 
 /* ---------- partner teacher, sales, notes ---------- */
-#lNameWrap[hidden],#lWhoWrap[hidden],#lHoursWrap[hidden],#lCutWrap[hidden],#lDelete[hidden],#tab-lessons[hidden],#sSharedWrap[hidden],#saleOtherWrap[hidden],#saleGiveWrap[hidden],#noteForStudentWrap[hidden],#saleSellerWrap[hidden],#tab-sales[hidden]{display:none!important}
+#noteCancelEdit[hidden],.ready-empty .owner-only[hidden],#lNameWrap[hidden],#lWhoWrap[hidden],#lHoursWrap[hidden],#lCutWrap[hidden],#lDelete[hidden],#tab-lessons[hidden],#sSharedWrap[hidden],#saleOtherWrap[hidden],#saleGiveWrap[hidden],#noteForStudentWrap[hidden],#saleSellerWrap[hidden],#tab-sales[hidden]{display:none!important}
 body.partner-mode [data-action="backup"], body.partner-mode #selToggle, body.partner-mode #findPics, body.partner-mode #tab-diary,
 body.partner-mode #remBanner, body.partner-mode [data-action="new-bundle"], body.partner-mode [data-action="edit-bundle"],
 body.partner-mode [data-action="del-bundle"], body.partner-mode [data-action="renew-bundle"], body.partner-mode [data-action="add-apps"],
@@ -827,6 +836,11 @@ table.sales tfoot td{font-weight:700;border-bottom:0}
 .note-item .nh{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-family:var(--ui);font-size:.8rem}
 .note-item .nk{font-weight:700}
 .note-item .nm{color:var(--ink-soft);flex:1}
+.note-item.editing{outline:2px solid var(--mint);outline-offset:1px}
+.notes-older{margin-top:4px}
+.notes-older>summary{cursor:pointer;font-family:var(--ui);font-weight:700;font-size:.88rem;color:var(--ink-soft);padding:8px 2px;list-style-position:inside}
+.notes-older[open]>summary{margin-bottom:6px}
+.notes-older .note-item{margin-bottom:8px;opacity:.85}
 .note-item .nb{margin:4px 0 2px;white-space:pre-wrap;font-family:var(--ui);font-size:.92rem;line-height:1.45}
 .note-form{border-bottom:1px solid var(--line);padding-bottom:6px}
 .sub-h{font-family:var(--ui);margin:18px 0 6px}
@@ -932,9 +946,13 @@ body.partner-mode .date-btn .chg{display:none}
   <section class="view" id="view-hubs" hidden>
     <div class="hero">
       <div class="page-head"><h2>Class hubs</h2>
-      <button class="btn btn-primary" data-action="new-bundle"><svg class="i"><use href="#i-plus"/></svg>Create 3-month bundle</button></div>
-      <p class="note-box">Invite students to a level, an exam or a tailored bundle. Each student gets one personal link. Their page is live: anything you add to their hubs appears straight away.</p>
+      <button class="btn btn-primary" data-action="new-bundle"><svg class="i"><use href="#i-plus"/></svg>Create tailored bundle</button></div>
+      <p class="note-box">Invite students to a ready quarterly bundle, a tailored bundle, a level or an exam. Each student gets one personal link. Their page is live: anything you add to their hubs appears straight away.</p>
     </div>
+    <h3 class="section-title">Ready bundles – every quarter</h3>
+    <p class="hint">Prepare the links once for each level and exam, for every quarter of the year. They are offered automatically when you record a sale. Need something special for one student? Press ✂️ next to their name to get their own copy to tailor.</p>
+    <div class="sales-tools" id="readyTools"></div>
+    <div class="grid-2" id="readyGrid"></div>
     <h3 class="section-title">Tailored 3-month bundles</h3>
     <div class="grid-2" id="bundleGrid"></div>
     <h3 class="section-title">Levels &amp; exams</h3>
@@ -1183,7 +1201,7 @@ body.partner-mode .date-btn .chg{display:none}
       </div>
       <div class="field"><label for="noteBody">Note</label><textarea id="noteBody" rows="3" placeholder="e.g. Unit 4 reading, conditionals revised. Struggles with listening – more podcasts."></textarea></div>
       <label class="pick-row" id="noteForStudentWrap" hidden><input type="checkbox" id="noteForStudent" checked><span class="t">Show this homework on the student's page</span></label>
-      <div class="modal-foot"><button type="submit" class="btn btn-primary">Save note</button></div>
+      <div class="modal-foot"><button type="button" class="btn btn-outline" id="noteCancelEdit" hidden>Cancel editing</button><button type="submit" class="btn btn-primary" id="noteSave">Save note</button></div>
     </form>
     <div class="seg notes-filter" id="notesFilter" role="group" aria-label="Show"></div>
     <div class="notes-list" id="notesList"></div>
@@ -1398,11 +1416,14 @@ const SKILLS = {
   'speaking':        {label:'Speaking',        emoji:'🗣️', cls:'sk-speaking'},
   'grammar':         {label:'Grammar',         emoji:'🧩', cls:'sk-grammar'},
   'listening':       {label:'Listening',       emoji:'🎧', cls:'sk-listening'},
+  'podcasts':        {label:'Podcasts',        emoji:'📻', cls:'sk-listening'},
   'vocabulary':      {label:'Vocabulary',      emoji:'📚', cls:'sk-vocabulary'},
   'reading':         {label:'Reading',         emoji:'📖', cls:'sk-reading'},
   'writing':         {label:'Writing',         emoji:'✍️', cls:'sk-writing'},
   'cultural corner': {label:'Cultural corner', emoji:'🌍', cls:'sk-culture'},
   'sample tests':    {label:'Tests',           emoji:'📝', cls:'sk-tests'},
+  /* exam sections */
+  'cae:mock':        {label:'CAE Mock Exams',  emoji:'🏅', cls:'sk-tests', exam:'CAE'},
   /* Professional English topics */
   'eng:interview':   {label:'Job interview',   emoji:'🤝', cls:'sk-speaking',  group:'eng'},
   'eng:bim':         {label:'BIM articles',    emoji:'🏗️', cls:'sk-reading',   group:'eng'},
@@ -1430,7 +1451,11 @@ const SKILLS = {
 };
 const GROUPS = {eng:{label:'Engineering', emoji:'🛠️'}, ext:{label:'External links', emoji:'🌐'}};
 const CORE = ['speaking','grammar','listening','vocabulary'];
-const OWN_SKILLS = ['speaking','vocabulary','grammar','listening','reading','writing','cultural corner','sample tests'];
+const OWN_SKILLS = ['speaking','vocabulary','grammar','listening','podcasts','reading','writing','cultural corner','sample tests'];
+const EXAM_SECTIONS = ['cae:mock'];
+/* sections shown in these levels even while they are still empty, so you can add links straight away */
+const SHOW_IN_LEVEL = {'reading':['Junior','B1','B2','C1'], 'podcasts':['B1','B2']};   /* shown only in that exam (SKILLS[x].exam) */
+const examOf = s => (SKILLS[s] || {}).exam || '';
 const PRO_SECTIONS = ['eng:interview','eng:bim','eng:bimrev','presentation','hr','office','jeweller','hairdresser'];
 const EXT_SECTIONS = ['ext:speaking','ext:vocabulary','ext:grammar','ext:listening','ext:reading','ext:writing','ext:culture','ext:tests','ext:pdf','ext:video','ext:ted','ext:tedvocab'];
 const NO_SKILL = {'Summer Camp':'🏕️','Baking with Alice':'🧁'};
@@ -1438,10 +1463,11 @@ const COURSES = ['Summer Camp','Baking with Alice','Professional English'];
 const HUB_EMOJI = {'Mini':'🐣','Junior':'🧒','A2':'🌱','B1':'🌿','B2':'🌳','C1':'🏔️','Érettségi':'📜','CAE':'🏅','Summer Camp':'🏕️','Baking with Alice':'🧁','Professional English':'💼'};
 const BUNDLE_MONTHS = 3;
 const MAX_FILE_MB = 15;
-const ALL_SKILLS = [...OWN_SKILLS, ...PRO_SECTIONS, ...EXT_SECTIONS, 'general'];
+const ALL_SKILLS = [...EXAM_SECTIONS, ...OWN_SKILLS, ...PRO_SECTIONS, ...EXT_SECTIONS, 'general'];
 function skillsFor(level){
   if (NO_SKILL[level]) return ['general'];
   if (level === 'Professional English') return [...PRO_SECTIONS, ...EXT_SECTIONS];
+  if (level === 'Exams') return [...EXAM_SECTIONS, ...OWN_SKILLS, ...EXT_SECTIONS];
   return [...OWN_SKILLS, ...EXT_SECTIONS];
 }
 const groupOf = s => (SKILLS[s] || {}).group || '';
@@ -1625,7 +1651,7 @@ const BUILTIN_PREVIEWS = {
 };
 const urlKey = u => String(u||'').toLowerCase().replace(/^https?:\/\/(www\.)?/,'').replace(/[?#].*$/,'').replace(/\/+$/,'');
 const PREFER_LIVE = new Set(['barbaralangszabo-collab.github.io/fluency-lab-b1']);
-const previewOf = (url, image) => (image || !isExternal(url)) ? previewOfOld(url, image) : (pictureSources(url, image)[0] || snapshotOf(url));
+const previewOf = (url, image) => (image || !isExternal(url)) ? previewOfOld(url, image) : (ogSrc(pictureSources(url, image)[0]) || snapshotOf(url));
 /* built-in pictures of your own apps: matched even when the web address is written slightly differently
    (capitals, double dashes, a trailing slash or index.html), and Level Up B1+ / B2+ are never mixed up */
 const normKey = k => String(k||'').toLowerCase().replace(/\/index\.html?$/,'').replace(/[^a-z0-9./]+/g,'-').replace(/-+/g,'-').replace(/-(?=\/|$)/g,'').replace(/\/+$/,'');
@@ -1661,7 +1687,7 @@ function pictureSources(url, image){
   const key = urlKey(url);
   if (PREFER_LIVE.has(key)) list.push(snapshotOf(url), builtinFor(url));
   else if (builtinFor(url)) list.push(builtinFor(url));
-  else if (isExternal(url)) list.push(ogImageOf(url), snapshotOf(url));   /* the page's own share picture first, then a screenshot */
+  else if (isExternal(url)) list.push(OG + url, snapshotOf(url));   /* the page's own share picture first (looked up once, see below), then a screenshot */
   else list.push(snapshotOf(url));
   return [...new Set(list.filter(Boolean))];
 }
@@ -1670,8 +1696,61 @@ function thumbNext(img){
   img.closest('.thumb')?.classList.remove('loaded','fit','photo');
   const rest = JSON.parse(img.dataset.rest || '[]');
   if (!rest.length){ img.closest('.thumb')?.classList.add('failed'); return; }
-  img.dataset.rest = JSON.stringify(rest.slice(1)); img.dataset.tries = '0'; img.src = rest[0];
+  img.dataset.rest = JSON.stringify(rest.slice(1)); img.dataset.tries = '0';
+  if (rest[0].startsWith(OG)){ startOg(img, rest[0].slice(OG.length)); return; }
+  img.src = rest[0];
 }
+/* ---- share pictures of other websites ----
+   They are looked up through a free service that allows only a limited number of look-ups a day. A laptop shows many
+   cards at once, so the limit ran out and pictures stayed empty. Now each picture is looked up only once, a few at a time,
+   remembered in this browser, and – for your own library – saved with the link, so it loads straight away everywhere. */
+const OG = 'og:';
+const PIC_CACHE_KEY = 'lh-pics-v1', PIC_TTL_EMPTY = 7*864e5;
+let picCache = (()=>{ try { return JSON.parse(localStorage.getItem(PIC_CACHE_KEY) || '{}'); } catch(e){ return {}; } })();
+const ogSrc = x => String(x||'').startsWith(OG) ? (picCached(x.slice(OG.length)) || ogImageOf(x.slice(OG.length))) : x;
+function picCached(url){   /* undefined = not looked up yet, '' = the site has no picture, otherwise the picture */
+  const c = picCache[linkKey(url)]; if (!c) return undefined;
+  if (c.u) return c.u;
+  return (Date.now() - (c.t||0) < PIC_TTL_EMPTY) ? '' : undefined;
+}
+function picRemember(url, u){
+  picCache[linkKey(url)] = {u, t:Date.now()};
+  try { localStorage.setItem(PIC_CACHE_KEY, JSON.stringify(picCache)); } catch(e){}
+}
+let ogQueue = [], ogBusy = 0, ogPausedUntil = 0;
+function startOg(img, url){
+  img.removeAttribute('data-og');
+  const c = picCached(url);
+  if (c){ img.src = c; return; }
+  if (c==='' || Date.now() < ogPausedUntil){ thumbNext(img); return; }
+  ogQueue.push({img, url}); pumpOg();
+}
+function pumpOg(){
+  while (ogBusy < 2 && ogQueue.length){
+    const {img, url} = ogQueue.shift();
+    if (!img.isConnected) continue;
+    ogBusy++;
+    findPicture(url, true).then(pic=>{
+      if (pic === null){ thumbNext(img); return; }                                             /* no connection: try again next time */
+      if (pic === 'LIMIT'){ ogPausedUntil = Date.now() + 30*60e3; thumbNext(img); return; }   /* daily limit: screenshots for now */
+      picRemember(url, pic || '');
+      if (pic){ img.src = pic; savePicToLink(url, pic); } else thumbNext(img);
+    }).catch(()=>thumbNext(img)).finally(()=>{ ogBusy--; pumpOg(); });
+  }
+}
+async function savePicToLink(url, pic){
+  if (typeof data==='undefined' || !data.links || document.body.classList.contains('student-mode') || (typeof pv!=='undefined' && pv)) return;
+  const k = linkKey(url);
+  for (const l of data.links.filter(x=>!x.image && linkKey(x.url)===k && canEditLink(x))){
+    try { const r = await sb.from('links').update({image_url:pic}).eq('id', l.id); if (!r.error) l.image = pic; } catch(e){}
+  }
+}
+/* pictures waiting for a look-up start when they come near the screen */
+/* (an <img> without a picture yet has no size, so the card's picture frame is watched instead) */
+const ogSeen = new IntersectionObserver(es=>es.forEach(en=>{ if (!en.isIntersecting) return; ogSeen.unobserve(en.target);
+  const i = en.target.querySelector('img[data-og]'); if (i) startOg(i, i.dataset.og); }), {rootMargin:'400px 0px'});
+new MutationObserver(()=>document.querySelectorAll('img[data-og]:not([data-og-watch])').forEach(i=>{ i.setAttribute('data-og-watch',''); ogSeen.observe(i.closest('.thumb') || i.parentElement); }))
+  .observe(document.documentElement, {childList:true, subtree:true});
 /* check each picture once it has loaded:
    - the screenshot service first sends a small "please wait" picture: retry a few times, then move on
    - tiny pictures (usually a site logo) would look blurry: try the next source instead
@@ -1681,9 +1760,9 @@ function thumbLoaded(img){
   const shot = /s\.wordpress\.com\/mshots/.test(img.src), builtin = img.src.startsWith('data:image');
   if (shot && img.naturalWidth !== 640){
     const tries = +(img.dataset.tries || 0);
-    if (tries >= 3){ thumbNext(img); return; }
+    if (tries >= 7){ thumbNext(img); return; }
     img.dataset.tries = tries + 1;
-    setTimeout(()=>{ if (img.isConnected) img.src = img.src.replace(/&r=\d+$/,'') + '&r=' + (tries+1); }, 3000 * (tries+1));
+    setTimeout(()=>{ if (img.isConnected) img.src = img.src.replace(/&r=\d+$/,'') + '&r=' + (tries+1); }, Math.min(15000, 3000 * (tries+1)));
     return;
   }
   const w = img.naturalWidth, h = img.naturalHeight, more = JSON.parse(img.dataset.rest || '[]').length;
@@ -1695,13 +1774,17 @@ function thumbLoaded(img){
   if (fit) thumb.style.setProperty('--pic', `url("${img.src.replace(/"/g,'%22')}")`); else thumb.style.removeProperty('--pic');
 }
 function thumbHTML(url, image, title){
-  const [first, ...rest] = pictureSources(url, image);
+  let [first, ...rest] = pictureSources(url, image);
+  /* the share picture of a site is looked up once and remembered; until then the picture waits until it scrolls into view */
+  let og = '';
+  if (first && first.startsWith(OG)){ const c = picCached(first.slice(OG.length)); if (c) first = c; else if (c===''){ [first, ...rest] = rest; } else { og = first.slice(OG.length); } }
   return `<a class="thumb" href="${esc(url)}" target="_blank" rel="noopener noreferrer" tabindex="-1" aria-hidden="true">
-    ${first ? `<img src="${esc(first)}" data-rest="${esc(JSON.stringify(rest))}" alt="" loading="lazy" referrerpolicy="no-referrer" onload="thumbLoaded(this)" onerror="thumbNext(this)">` : ''}
+    ${og ? `<img data-og="${esc(og)}" data-rest="${esc(JSON.stringify(rest))}" alt="" referrerpolicy="no-referrer" onload="thumbLoaded(this)" onerror="thumbNext(this)">` : ''}
+    ${first && !og ? `<img src="${esc(first)}" data-rest="${esc(JSON.stringify(rest))}" alt="" loading="lazy" referrerpolicy="no-referrer" onload="thumbLoaded(this)" onerror="thumbNext(this)">` : ''}
     <span class="fallback"><img src="${esc(faviconOf(url))}" alt="" loading="lazy" onerror="this.remove()">${esc(domain(url))}</span></a>`;
 }
 /* look up a page's own share picture (og:image) so it can be saved with the link */
-async function findPicture(url){
+async function findPicture(url, strict){
   const yt = ytId(url); if (yt) return `https://i.ytimg.com/vi/${yt}/hqdefault.jpg`;
   const vm = vimeoId(url); if (vm) return `https://vumbnail.com/${vm}.jpg`;
   const ctl = new AbortController(), timer = setTimeout(()=>ctl.abort(), 8000);
@@ -1713,7 +1796,7 @@ async function findPicture(url){
     if (!im || !im.url) return '';
     if ((im.width && im.width < 320) || (im.height && im.height < 160)) return '';   /* just a small logo: a screenshot looks better */
     return im.url;
-  } catch(e){ return ''; } finally { clearTimeout(timer); }
+  } catch(e){ return strict ? null : ''; } finally { clearTimeout(timer); }
 }
 const pad = n => String(n).padStart(2,'0');
 const isoOf = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
@@ -1894,7 +1977,10 @@ function stHomeworkHTML(){
 /* ---------- products ---------- */
 function products(){
   const P = HUBSET.prices || HUB_DEFAULTS.prices, out = [];
-  data.packages.forEach(p=>out.push({key:'bundle:'+p.id, type:'bundle', title:p.title, price:P.bundle, access:p.id, months:p.months||BUNDLE_MONTHS, start:p.start, links:linksOf(p)}));
+  const cq = quarterOf(new Date()), nq = shiftQ(cq.y, cq.q, 1), soon = new Set(READY.flatMap(r=>[readyId(r.k, cq.y, cq.q), readyId(r.k, nq.y, nq.q)]));
+  data.packages.filter(p=>soon.has(p.id)).sort((a,b)=>String(a.start).localeCompare(String(b.start)) || READY.findIndex(r=>a.id.startsWith('rb-'+r.k+'-')) - READY.findIndex(r=>b.id.startsWith('rb-'+r.k+'-')))
+    .forEach(p=>out.push({key:'bundle:'+p.id, type:'bundle', ready:true, title:p.title, price:P.bundle, access:p.id, months:p.months||BUNDLE_MONTHS, start:p.start, links:linksOf(p)}));
+  data.packages.filter(p=>!isReady(p)).forEach(p=>out.push({key:'bundle:'+p.id, type:'bundle', title:p.title, price:P.bundle, access:p.id, months:p.months||BUNDLE_MONTHS, start:p.start, links:linksOf(p)}));
   const pro = findHub('lvl:Professional English');
   if (pro) out.push({key:'pro', type:'pro', title:'Professional English', price:P.pro, access:pro.id, links:hubLinks(pro)});
   data.links.filter(l=>!l.owner && l.category==='Baking with Alice').forEach(l=>out.push({key:'baking:'+l.id, type:'baking', title:l.title, price:P.baking, access:'x:'+l.id, links:[l]}));
@@ -1909,13 +1995,19 @@ function openSale(sid){
   const stds = [...data.students].sort((a,b)=>a.name.localeCompare(b.name,'hu'));
   if (!stds.length){ toast('Add a student first'); return; }
   $('saleStudent').innerHTML = stds.map(s=>`<option value="${esc(s.id)}" ${s.id===sid?'selected':''}>${esc(s.name)}</option>`).join('');
-  const ps = products(), grp = (t, label) => { const xs = ps.filter(p=>p.type===t); return xs.length ? `<optgroup label="${esc(label)}">${xs.map(p=>`<option value="${esc(p.key)}">${esc(p.title)} – ${esc(fmtFt(p.price))}</option>`).join('')}</optgroup>` : ''; };
-  $('saleProduct').innerHTML = grp('bundle','3-month bundles') + grp('pro','Professional English') + grp('baking','Baking with Alice projects') + grp('material6','Digital material') + `<optgroup label="Other"><option value="other">Something else (type it in)</option></optgroup>`;
+  const ps = products(), grp = (t, label) => { const xs = ps.filter(p=>t==='ready' ? p.ready : (p.type===t && !p.ready)); return xs.length ? `<optgroup label="${esc(label)}">${xs.map(p=>`<option value="${esc(p.key)}">${esc(p.title)} – ${esc(fmtFt(p.price))}</option>`).join('')}</optgroup>` : ''; };
+  $('saleProduct').innerHTML = grp('ready','Ready bundles') + grp('bundle','Tailored 3-month bundles') + grp('pro','Professional English') + grp('baking','Baking with Alice projects') + grp('material6','Digital material') + `<optgroup label="Other"><option value="other">Something else (type it in)</option></optgroup>`;
   $('saleSellerWrap').hidden = ROLE!=='owner' || !PARTNERS.length;
   $('saleSeller').innerHTML = `<option value="owner">${esc(ownerName())} (me)</option>` + PARTNERS.map(p=>`<option value="${esc(p.email)}">${esc(p.name)} (${Math.round(p.commission*100)}% commission)</option>`).join('');
   $('saleDate').value = today(); $('salePaid').checked = false; $('saleGive').checked = true; $('saleNote').value = ''; $('saleOther').value = '';
+  saleGuessReady();
   saleProductChanged();
   openModal('mSale');
+}
+/* picks the ready bundle that fits the chosen student, so selling the next quarter is one click */
+function saleGuessReady(){
+  const s = data.students.find(x=>String(x.id)===String($('saleStudent').value)), p = readyFor(s);
+  if (p && [...$('saleProduct').options].some(o=>o.value==='bundle:'+p.id)) $('saleProduct').value = 'bundle:'+p.id;
 }
 function saleProductChanged(){
   const key = $('saleProduct').value, p = products().find(x=>x.key===key);
@@ -2105,33 +2197,71 @@ async function removePartner(email){
 }
 
 /* ================= notes, class notes & homework ================= */
-let notesStudent = null, notesFilter = 'all';
+let notesStudent = null, notesFilter = 'all', noteEditing = null, notesOldOpen = false;
+const NOTE_RECENT_DAYS = 30;
 function openNotes(sid){
-  notesStudent = sid; notesFilter = 'all';
+  notesStudent = sid; notesFilter = 'all'; notesOldOpen = false; noteEditReset();
   const s = data.students.find(x=>x.id===sid); if (!s) return;
   $('mNotesTitle').textContent = 'Notes – ' + s.name;
   $('noteKind').value = 'class'; $('noteDate').value = today(); $('noteBody').value = ''; $('noteForStudent').checked = true;
   noteKindChanged(); renderNotes(); openModal('mNotes');
 }
 function noteKindChanged(){ $('noteForStudentWrap').hidden = $('noteKind').value!=='homework'; }
+/* the relevant notes stay on top (open homework, the last 30 days, at least the 3 newest); the rest are rolled up */
+function noteIsRecent(n, i){
+  if (n.kind==='homework' && !n.done) return true;
+  if (i < 3) return true;
+  return String(n.note_date||'') >= addDays(today(), -NOTE_RECENT_DAYS);
+}
+function noteHTML(n){
+  const mine = ROLE==='owner' || n.author===ME;
+  return `<article class="note-item k-${esc(n.kind)}${n.kind==='homework' && n.done ? ' done' : ''}${noteEditing===n.id ? ' editing' : ''}">
+    <div class="nh"><span class="nk">${NOTE_KIND[n.kind]?.emoji||'💬'} ${esc(NOTE_KIND[n.kind]?.label||'Note')}</span><span class="nm">${esc(fmtDate(n.note_date))} · ${esc(authorName(n.author, n.author_name))}</span>
+      ${n.kind==='homework' ? `<label class="tick"><input type="checkbox" data-note-done="${esc(n.id)}" ${n.done?'checked':''}> Done</label>` : ''}
+      ${mine ? `<button type="button" class="btn-icon" data-notes="edit" data-id="${esc(n.id)}" aria-label="Edit note" title="Edit">${icon('edit')}</button>
+      <button type="button" class="btn-icon del" data-notes="del" data-id="${esc(n.id)}" aria-label="Delete note" title="Delete">${icon('trash')}</button>` : ''}</div>
+    <p class="nb">${esc(n.body)}</p>
+    ${n.kind==='homework' && n.for_student ? '<span class="tag">👁 on the student\'s page</span>' : ''}</article>`;
+}
 function renderNotes(){
-  const all = notesOf(notesStudent), list = notesFilter==='all' ? all : all.filter(n=>n.kind===notesFilter);
+  const all = notesOf(notesStudent).slice().sort((a,b)=>String(b.note_date).localeCompare(String(a.note_date)) || String(b.created_at||'').localeCompare(String(a.created_at||''))), list = notesFilter==='all' ? all : all.filter(n=>n.kind===notesFilter);
   $('notesFilter').innerHTML = [['all','All'], ...Object.entries(NOTE_KIND).map(([k,v])=>[k, v.emoji+' '+v.label])]
     .map(([k,l])=>`<button type="button" data-notes="filter" data-k="${k}" aria-pressed="${notesFilter===k}">${esc(l)} <small>${k==='all'?all.length:all.filter(n=>n.kind===k).length}</small></button>`).join('');
-  $('notesList').innerHTML = list.length ? list.map(n=>{
-    const mine = ROLE==='owner' || n.author===ME;
-    return `<article class="note-item k-${esc(n.kind)}${n.kind==='homework' && n.done ? ' done' : ''}">
-      <div class="nh"><span class="nk">${NOTE_KIND[n.kind]?.emoji||'💬'} ${esc(NOTE_KIND[n.kind]?.label||'Note')}</span><span class="nm">${esc(fmtDate(n.note_date))} · ${esc(authorName(n.author, n.author_name))}</span>
-        ${n.kind==='homework' ? `<label class="tick"><input type="checkbox" data-note-done="${esc(n.id)}" ${n.done?'checked':''}> Done</label>` : ''}
-        ${mine ? `<button type="button" class="btn-icon del" data-notes="del" data-id="${esc(n.id)}" aria-label="Delete note" title="Delete">${icon('trash')}</button>` : ''}</div>
-      <p class="nb">${esc(n.body)}</p>
-      ${n.kind==='homework' && n.for_student ? '<span class="tag">👁 on the student\'s page</span>' : ''}</article>`; }).join('')
+  const recent = list.filter((n,i)=>noteIsRecent(n, i)), older = list.filter((n,i)=>!noteIsRecent(n, i));
+  $('notesList').innerHTML = list.length ? recent.map(noteHTML).join('')
+      + (older.length ? `<details class="notes-older" ${notesOldOpen || older.some(n=>n.id===noteEditing) ? 'open' : ''}><summary>Older notes (${older.length})</summary>${older.map(noteHTML).join('')}</details>` : '')
     : `<p class="hint">Nothing here yet. Write what you did in class, set homework, or leave a note for each other.</p>`;
+  const d = $('notesList').querySelector('.notes-older'); if (d) d.addEventListener('toggle', ()=>{ notesOldOpen = d.open; });
+}
+document.addEventListener('click', e=>{ if (e.target.closest('#noteCancelEdit')){ noteEditReset(); $('noteBody').value = ''; $('noteKind').value = 'class'; $('noteDate').value = today(); noteKindChanged(); renderNotes(); } });
+function noteEditReset(){
+  noteEditing = null;
+  if ($('noteSave')) $('noteSave').textContent = 'Save note';
+  if ($('noteCancelEdit')) $('noteCancelEdit').hidden = true;
+}
+function editNote(id){
+  const n = data.notes.find(x=>x.id===id); if (!n) return;
+  noteEditing = id;
+  $('noteKind').value = n.kind; $('noteDate').value = String(n.note_date||today()).slice(0,10); $('noteBody').value = n.body;
+  $('noteForStudent').checked = !!n.for_student; noteKindChanged();
+  $('noteSave').textContent = 'Save changes'; $('noteCancelEdit').hidden = false;
+  renderNotes(); $('noteBody').focus(); $('noteForm').scrollIntoView({block:'nearest', behavior:'smooth'});
 }
 async function saveNote(e){
   e.preventDefault();
   const body = $('noteBody').value.trim(); if (!body){ toast('Write the note first'); return; }
   const kind = $('noteKind').value;
+  if (noteEditing){
+    const n = data.notes.find(x=>x.id===noteEditing);
+    const ch = {kind, body, note_date:$('noteDate').value || today(), for_student: kind==='homework' && $('noteForStudent').checked};
+    busy(e.submitter, true);
+    try { await q(sb.from('hub_notes').update(ch).eq('id', noteEditing), 'Could not save the note'); } catch(err){ busy(e.submitter, false); return; }
+    busy(e.submitter, false);
+    if (n) Object.assign(n, ch);
+    data.notes.sort((a,b)=>String(b.note_date).localeCompare(String(a.note_date)) || String(b.created_at||'').localeCompare(String(a.created_at||'')));
+    noteEditReset(); $('noteBody').value = ''; $('noteKind').value = 'class'; $('noteDate').value = today(); noteKindChanged();
+    renderNotes(); if (view==='students') renderStudents(); toast('Note updated'); return;
+  }
   const row = {id:uid('note'), student_id:notesStudent, kind, body, note_date:$('noteDate').value || today(),
     for_student: kind==='homework' && $('noteForStudent').checked, author_name: ROLE==='owner' ? ownerName() : (ME_ROW ? ME_ROW.name : '')};
   busy(e.submitter, true);
@@ -2148,7 +2278,7 @@ async function setNoteDone(id, on, input){
 async function deleteNote(id){
   if (!confirm('Delete this note?')) return;
   try { await q(sb.from('hub_notes').delete().eq('id', id)); } catch(e){ return; }
-  data.notes = data.notes.filter(n=>n.id!==id); renderNotes();
+  data.notes = data.notes.filter(n=>n.id!==id); if (noteEditing===id) noteEditReset(); renderNotes();
 }
 
 /* ================= product sheet ================= */
@@ -2247,6 +2377,7 @@ document.addEventListener('click', e=>{
   const na = t.dataset.notes;
   if (na==='filter'){ notesFilter = t.dataset.k; renderNotes(); }
   else if (na==='del') deleteNote(t.dataset.id);
+  else if (na==='edit') editNote(t.dataset.id);
 });
 document.addEventListener('change', e=>{
   const t = e.target;
@@ -2254,6 +2385,7 @@ document.addEventListener('change', e=>{
   else if (t.dataset.saleSettled) setSaleFlag(t.dataset.saleSettled, 'settled', t.checked, t);
   else if (t.dataset.noteDone) setNoteDone(t.dataset.noteDone, t.checked, t);
   else if (t.id==='saleProduct') saleProductChanged();
+  else if (t.id==='saleStudent'){ saleGuessReady(); saleProductChanged(); }
   else if (t.id==='saleSeller') updateSaleCommission();
   else if (t.id==='noteKind') noteKindChanged();
   else if (t.id==='sheetContact'){ try { localStorage.setItem('lh-sheet-contact', t.value.trim()); } catch(_){} renderSheet(); }
@@ -2656,7 +2788,8 @@ if (document.fonts) document.fonts.ready.then(()=>fitGrids());
 function renderChips(){
   $('skillChips').hidden = !!NO_SKILL[level];
   if (NO_SKILL[level]) return;
-  const list = level==='Professional English' ? ['GROUP:eng','presentation','hr','office','jeweller','hairdresser','GROUP:ext'] : [...OWN_SKILLS,'GROUP:ext'];
+  const list = level==='Professional English' ? ['GROUP:eng','presentation','hr','office','jeweller','hairdresser','GROUP:ext']
+    : [...(level==='Exams' ? EXAM_SECTIONS.filter(x=>exam===examOf(x)) : []), ...OWN_SKILLS,'GROUP:ext'];
   $('skillChips').innerHTML = `<button class="chip all" data-action="skill" data-skill="ALL" aria-pressed="${skill==='ALL'}">All</button>` +
     list.map(s=>{ const m = chipMeta(s); return `<button class="chip ${m.cls}" data-action="skill" data-skill="${esc(s)}" aria-pressed="${skill===s}"><span aria-hidden="true">${m.emoji}</span>${esc(m.label)}</button>`; }).join('');
 }
@@ -2699,7 +2832,8 @@ function renderLibrary(){
   const shown = inScope.filter(l =>
     matchSkill(l.subcategory) &&
     (!q_ || [l.title,l.notes,l.subcategory,l.category,l.exam,l.url].some(v=>String(v||'').toLowerCase().includes(q_))));
-  const order = (level==='ALL' || level==='MINE') ? ALL_SKILLS.filter(x=>x!=='general') : skillsFor(level);
+  const order = ((level==='ALL' || level==='MINE') ? ALL_SKILLS.filter(x=>x!=='general') : skillsFor(level))
+    .filter(x=>!examOf(x) || !(level==='Exams' && exam!=='ALL' && exam!==examOf(x)));
   const specific = level!=='ALL' && level!=='MINE' && !(level==='Exams' && exam==='ALL');
   const catBand = (cat, items) => `<section class="band sk-general">
       <div class="band-head"><span class="emoji" aria-hidden="true">${NO_SKILL[cat]}</span><h3>${esc(cat)}</h3>
@@ -2722,7 +2856,7 @@ function renderLibrary(){
     for (const b of blocksOf(order)){
       const inner = b.items.filter(s=>!parentOf(s) && (matchSkill(s) || childrenOf(s).some(matchSkill))).map(s=>{
         const items = matchSkill(s) ? itemsOf(s) : [];
-        const showEmpty = !q_ && specific && (skill===s || (!b.g && (CORE.includes(s) || level==='Professional English')) || (b.g==='eng' && level==='Professional English'));
+        const showEmpty = !q_ && specific && (skill===s || (examOf(s) && exam===examOf(s)) || (SHOW_IN_LEVEL[s]||[]).includes(level) || (!b.g && (CORE.includes(s) || level==='Professional English')) || (b.g==='eng' && level==='Professional English'));
         const kids = childrenOf(s).filter(matchSkill).map(c=>{
           const ci = itemsOf(c), show = ci.length || (!q_ && specific && (skill===c || (b.g==='eng' && level==='Professional English')));
           return show ? band(c, ci, '', true) : '';
@@ -2752,7 +2886,7 @@ function renderLibrary(){
 function openModal(id){ $(id).hidden = false; const f = $(id).querySelector('input:not([type=hidden]):not([type=file]),select'); if (f) setTimeout(()=>f.focus(),30); }
 function closeAll(){ document.querySelectorAll('.overlay').forEach(o=>o.hidden=true); if (['hubs','students'].includes(view)) go(view); }
 function fillSkillPicker(selected){
-  const list = skillsFor($('fLevel').value);
+  const list = skillsFor($('fLevel').value).filter(x=>!examOf(x) || $('fExam').value===examOf(x));
   if (!list.includes(selected)) selected = isExternal($('fUrl').value) && $('fUrl').value ? (list.find(x=>groupOf(x)==='ext') || list[0]) : list[0];
   const opt = s => `<label><input type="radio" name="fSkill" value="${esc(s)}" ${s===selected?'checked':''}>
     <span class="chip ${sk(s).cls}"><span aria-hidden="true">${parentOf(s)?'↳ ':''}${sk(s).emoji}</span>${esc(sk(s).label)}</span></label>`;
@@ -2864,7 +2998,7 @@ function reminders(){
   const out = [];
   data.packages.forEach(p=>{
     const end = addMonths(p.start, p.months||BUNDLE_MONTHS), d = daysUntil(end);
-    if (!p.followedUp && d <= REMIND_DAYS && d >= -60) out.push({kind:'bundle', p, end, d});
+    if (!isReady(p) && !p.followedUp && d <= REMIND_DAYS && d >= -60) out.push({kind:'bundle', p, end, d});
   });
   data.students.forEach(s=>{ if (s.examDate){ const d = daysUntil(s.examDate); if (d >= 0 && d <= EXAM_REMIND_DAYS) out.push({kind:'exam', s, d}); } });
   return out.sort((a,b)=>a.d-b.d);
@@ -2882,7 +3016,7 @@ function renderDiary(){
         <div class="modal-foot" style="justify-content:flex-start;flex-wrap:wrap">
           <button class="btn btn-primary btn-sm" data-action="renew-bundle" data-id="${esc(r.p.id)}">${icon('plus')}Plan the next 3 months</button>
           <button class="btn btn-outline btn-sm" data-action="edit-bundle" data-id="${esc(r.p.id)}">${icon('edit')}Edit this bundle</button>
-          <button class="btn btn-outline btn-sm" data-action="followed-up" data-id="${esc(r.p.id)}">Mark as done</button>
+          <button class="btn btn-outline btn-sm" data-action="followed-up" data-id="${esc(r.p.id)}">${icon('x')}Remove this message</button>
         </div></article>`;
     }
     return `<article class="sub-card rem exam">
@@ -2953,7 +3087,7 @@ function renewBundle(id){
   $('mPkgTitle').textContent = 'Plan the next 3 months';
   $('pTitle').value = p.title.replace(/\s*[–-]\s*next 3 months.*$/i,'') + ' – next 3 months';
   $('pStart').value = addMonths(p.start, p.months||BUNDLE_MONTHS);
-  $('pNotes').value = p.notes || '';
+  $('pNotes').value = '';          /* a new period starts without last period's messages */
   updateEnd();
   toast('Pick the new material for the next 3 months');
 }
@@ -2967,21 +3101,34 @@ function membersHTML(h){
   const mem = membersOf(h.id);
   if (!mem.length) return `<div class="members"><span class="member none">No students yet</span></div>`;
   return `<div class="members">${mem.map(s=>{ const p = hubProgress(s,h);
-    return `<span class="member" title="${p.done} of ${p.total} links done">${esc(s.name)}<span class="pct">${p.total?pct(p.done,p.total)+'%':''}</span><button type="button" data-action="remove-member" data-hub="${esc(h.id)}" data-id="${esc(s.id)}" aria-label="Remove ${esc(s.name)} from ${esc(h.title)}" title="Remove from hub">${icon('x')}</button></span>`; }).join('')}</div>`;
+    return `<span class="member" title="${p.done} of ${p.total} links done">${esc(s.name)}<span class="pct">${p.total?pct(p.done,p.total)+'%':''}</span>${isReady(h.id) ? `<button type="button" class="owner-only" data-ready="tailor" data-id="${esc(h.id)}" data-sid="${esc(s.id)}" aria-label="Tailor a copy for ${esc(s.name)}" title="Tailor a copy for ${esc(s.name)}">✂️</button>` : ''}<button type="button" data-action="remove-member" data-hub="${esc(h.id)}" data-id="${esc(s.id)}" aria-label="Remove ${esc(s.name)} from ${esc(h.title)}" title="Remove from hub">${icon('x')}</button></span>`; }).join('')}</div>`;
+}
+function bundleNotesHTML(p){
+  const lines = String(p.notes||'').split(/\n+/).map(x=>x.trim()).filter(Boolean);
+  if (!lines.length) return '';
+  return `<ul class="bnotes">${lines.map((t,i)=>`<li><span>${esc(t)}</span><button type="button" class="btn-icon owner-only" data-action="del-bundle-note" data-id="${esc(p.id)}" data-i="${i}" aria-label="Delete this message" title="Delete this message">${icon('x')}</button></li>`).join('')}</ul>`;
+}
+async function deleteBundleNote(id, i){
+  const p = data.packages.find(x=>x.id===id); if (!p) return;
+  const lines = String(p.notes||'').split(/\n+/).map(x=>x.trim()).filter(Boolean);
+  lines.splice(Number(i), 1);
+  const notes = lines.join('\n');
+  try { await q(sb.from('bundles').update({notes}).eq('id', id)); } catch(e){ return; }
+  p.notes = notes; renderHubs(); toast('Message deleted');
 }
 function hubCard(h){
   const items = hubLinks(h), mem = membersOf(h.id);
-  const bundle = h.kind==='bundle';
+  const bundle = h.kind==='bundle', ready = bundle && isReady(h.id);
   return `<article class="panel">
     <div class="hub-head"><span class="hub-emoji" aria-hidden="true">${h.emoji}</span>
-      <div class="hub-title"><h3>${esc(h.title)}</h3><span class="meta">${bundle ? 'Tailored bundle' : esc(h.sub)} · ${plural(items.length,'link')} · ${plural(mem.length,'student')}</span></div>
+      <div class="hub-title"><h3>${esc(h.title)}</h3><span class="meta">${ready ? 'Ready bundle' : bundle ? 'Tailored bundle' : esc(h.sub)} · ${plural(items.length,'link')} · ${plural(mem.length,'student')}</span></div>
     </div>
     ${bundle?`<div><button type="button" class="date date-btn" data-action="bundle-date" data-id="${esc(h.id)}" title="Change the start date">📅 ${esc(fmtDate(h.start))} – ${esc(fmtDate(h.end))} <span class="chg">change</span></button></div>`:''}
-    ${bundle && h.pkg.notes?`<p class="notes">${esc(h.pkg.notes)}</p>`:''}
+    ${bundle ? bundleNotesHTML(h.pkg) : ''}
     ${bundle ? listHTML(items) : ''}
     ${membersHTML(h)}
     <div class="panel-actions">
-      <div class="grp"><button class="btn btn-primary btn-sm" data-action="invite-hub" data-id="${esc(h.id)}">${icon('invite')}Invite students</button></div>
+      <div class="grp"><button class="btn btn-primary btn-sm" data-action="invite-hub" data-id="${esc(h.id)}">${icon('invite')}Invite students</button>${ready ? readyExtraBtns(h) : ''}</div>
       <div class="grp">
         ${bundle ? '' : `<button class="btn-icon" data-action="open-level" data-id="${esc(h.id)}" aria-label="Show ${esc(h.title)} in the library" title="Show in library">${icon('list')}</button>`}
         <button class="btn-icon" data-action="copy-hub" data-id="${esc(h.id)}" aria-label="Copy all links" title="Copy all links" ${items.length?'':'disabled'}>${icon('copy')}</button>
@@ -2991,11 +3138,102 @@ function hubCard(h){
     </div></article>`;
 }
 function renderHubs(){
-  $('hubGrid').innerHTML = categoryHubs().map(hubCard).join('');
-  $('bundleGrid').innerHTML = data.packages.length ? data.packages.map(p=>hubCard(bundleHub(p))).join('')
+  $('hubGrid').innerHTML = categoryHubs().map(h=>hubCard(h)).join('');
+  renderReady();
+  const tailored = data.packages.filter(p=>!isReady(p));
+  $('bundleGrid').innerHTML = tailored.length ? tailored.map(p=>hubCard(bundleHub(p))).join('')
     : `<div class="empty" style="grid-column:1/-1"><h3>No bundles yet</h3><p>Pick links from any level or exam into a tailored 3-month bundle for one student or a small group.</p>
       <button class="btn btn-primary" data-action="new-bundle">${icon('plus')}Create 3-month bundle</button></div>`;
 }
+/* ================= ready bundles: one per level / exam for every quarter ================= */
+const READY = [{k:'mini', title:'Mini', hub:'lvl:Mini'}, {k:'b1', title:'B1', hub:'lvl:B1'}, {k:'b2', title:'B2', hub:'lvl:B2'},
+               {k:'c1', title:'C1', hub:'lvl:C1'}, {k:'erettsegi', title:'Érettségi', hub:'exam:Érettségi'}, {k:'cae', title:'CAE', hub:'exam:CAE'}];
+const isReady = p => String((p && p.id) || p || '').startsWith('rb-');
+const readyId = (k, y, qn) => `rb-${k}-${y}-q${qn}`;
+const readyParse = id => { const m = String(id).match(/^rb-(.+)-(\d{4})-q([1-4])$/); return m ? {k:m[1], y:+m[2], q:+m[3], r:READY.find(r=>r.k===m[1])} : null; };
+const quarterOf = d => ({y:d.getFullYear(), q:Math.floor(d.getMonth()/3)+1});
+const quarterStart = (y, qn) => `${y}-${pad((qn-1)*3+1)}-01`;
+const shiftQ = (y, qn, d) => { const i = y*4 + (qn-1) + d; return {y:Math.floor(i/4), q:i%4+1}; };
+const readyTitle = (r, y, qn) => `${r.title} · Q${qn} ${y}`;
+let readyQ = quarterOf(new Date()), readyNew = null;
+const readyBundle = (k, y, qn) => data.packages.find(p=>p.id===readyId(k, y, qn));
+function renderReady(){
+  const box = $('readyGrid'); if (!box) return;
+  const {y, q:qn} = readyQ, cur = quarterOf(new Date()), st = quarterStart(y, qn);
+  $('readyTools').innerHTML = `<div class="period"><button type="button" class="btn-icon" data-ready="prev" aria-label="Previous quarter">‹</button><b>Q${qn} ${y}</b><button type="button" class="btn-icon" data-ready="next" aria-label="Next quarter">›</button></div>
+    <span class="hint">${esc(fmtDate(st))} – ${esc(fmtDate(addDays(addMonths(st, 3), -1)))}${y===cur.y && qn===cur.q ? ' · current quarter' : ''}</span>`;
+  box.innerHTML = READY.map(r=>{
+    const p = readyBundle(r.k, y, qn), hub = findHub(r.hub), emoji = hub ? hub.emoji : '🎒';
+    if (p) return hubCard(bundleHub(p));
+    const pq = shiftQ(y, qn, -1), prev = readyBundle(r.k, pq.y, pq.q);
+    return `<article class="panel ready-empty"><div class="hub-head"><span class="hub-emoji" aria-hidden="true">${emoji}</span>
+      <div class="hub-title"><h3>${esc(readyTitle(r, y, qn))}</h3><span class="meta">Not prepared yet</span></div></div>
+      <div class="panel-actions owner-only"><div class="grp"><button class="btn btn-primary btn-sm" data-ready="prepare" data-k="${r.k}">${icon('plus')}Choose the links</button>
+        ${prev && (prev.linkIds||[]).length ? `<button class="btn btn-outline btn-sm" data-ready="copy-prev" data-k="${r.k}">Copy Q${pq.q} ${pq.y} (${plural(prev.linkIds.length,'link')})</button>` : ''}</div></div></article>`;
+  }).join('');
+}
+function readyExtraBtns(h){
+  const info = readyParse(h.id); if (!info) return '';
+  const nq = shiftQ(info.y, info.q, 1), next = readyBundle(info.k, nq.y, nq.q), mem = membersOf(h.id);
+  if (!next || !mem.length || mem.every(s=>(s.hubs||[]).some(m=>m.id===next.id))) return '';
+  return `<button class="btn btn-outline btn-sm owner-only" data-ready="move-next" data-id="${esc(h.id)}" title="Give the same students the Q${nq.q} ${nq.y} bundle">→ Q${nq.q} ${nq.y}</button>`;
+}
+function prepareReady(k){
+  const r = READY.find(x=>x.k===k), {y, q:qn} = readyQ; if (!r) return;
+  openBundleModal(null);
+  readyNew = {id: readyId(k, y, qn)};
+  $('mPkgTitle').textContent = `Ready bundle – ${readyTitle(r, y, qn)}`;
+  $('pTitle').value = readyTitle(r, y, qn); $('pStart').value = quarterStart(y, qn); updateEnd();
+}
+async function copyPrevReady(k){
+  const r = READY.find(x=>x.k===k), {y, q:qn} = readyQ, pq = shiftQ(y, qn, -1), prev = readyBundle(k, pq.y, pq.q); if (!r || !prev) return;
+  const row = {id: readyId(k, y, qn), title: readyTitle(r, y, qn), start: quarterStart(y, qn), months: BUNDLE_MONTHS, notes: '', linkIds: [...(prev.linkIds||[])]};
+  try { await q(sb.from('bundles').upsert(bundleRow(row))); } catch(e){ return; }
+  data.packages.unshift(row); renderHubs(); toast(`${row.title} is ready – change the links with ✏️ if you like`);
+}
+/* a student who needs something special gets an own copy of the ready bundle, which you can change freely */
+async function tailorReady(id, sid){
+  const p = data.packages.find(x=>x.id===id), s = data.students.find(x=>String(x.id)===String(sid)); if (!p || !s) return;
+  const joined = ((s.hubs||[]).find(m=>m.id===id)||{}).date || today();
+  const row = {id: uid('pkg'), title: `${p.title} – ${s.name}`, start: p.start, months: p.months||BUNDLE_MONTHS, notes: '', linkIds: [...(p.linkIds||[])]};
+  try {
+    await q(sb.from('bundles').upsert(bundleRow(row)));
+    await q(sb.from('memberships').upsert({student_id:s.id, hub_id:row.id, joined}, {onConflict:'student_id,hub_id', ignoreDuplicates:true}));
+    await q(sb.from('memberships').delete().eq('student_id', s.id).eq('hub_id', id));
+  } catch(e){ await loadAll(); rerender(); return; }
+  data.packages.unshift(row);
+  s.hubs = (s.hubs||[]).filter(m=>m.id!==id).concat([{id:row.id, date:joined}]);
+  renderHubs(); openBundleModal(row); toast(`${firstName(s.name)} now has an own copy – change the links and save`);
+}
+async function moveReadyNext(id){
+  const info = readyParse(id); if (!info) return;
+  const nq = shiftQ(info.y, info.q, 1), next = readyBundle(info.k, nq.y, nq.q); if (!next) return;
+  const who = membersOf(id).filter(s=>!(s.hubs||[]).some(m=>m.id===next.id)); if (!who.length) return;
+  if (!confirm(`Give ${who.map(s=>firstName(s.name)).join(', ')} the ${next.title} bundle too?`)) return;
+  const joined = quarterStart(nq.y, nq.q) < today() ? today() : quarterStart(nq.y, nq.q);
+  try { await q(sb.from('memberships').upsert(who.map(s=>({student_id:s.id, hub_id:next.id, joined})), {onConflict:'student_id,hub_id', ignoreDuplicates:true})); } catch(e){ return; }
+  who.forEach(s=>(s.hubs = s.hubs||[]).push({id:next.id, date:joined}));
+  renderHubs(); toast(`${plural(who.length,'student')} added to ${next.title}`);
+}
+/* the ready bundle that fits a student: from her level / exam hub or her current ready bundle, this quarter (or the next one) */
+function readyFor(s){
+  if (!s) return null;
+  const ids = (s.hubs||[]).map(m=>m.id), cur = quarterOf(new Date()), nq = shiftQ(cur.y, cur.q, 1);
+  const keys = READY.filter(r=>ids.includes(r.hub) || ids.some(id=>(readyParse(id)||{}).k===r.k)).map(r=>r.k);
+  for (const k of keys){ const p = readyBundle(k, cur.y, cur.q) || readyBundle(k, nq.y, nq.q); if (p && !ids.includes(p.id)) return p; }
+  for (const k of keys){ const p = readyBundle(k, nq.y, nq.q); if (p) return p; }
+  return null;
+}
+document.addEventListener('click', e=>{
+  const t = e.target.closest('[data-ready]'); if (!t) return;
+  const a = t.dataset.ready;
+  if (a==='prev' || a==='next'){ readyQ = shiftQ(readyQ.y, readyQ.q, a==='prev' ? -1 : 1); renderReady(); }
+  else if (a==='prepare') prepareReady(t.dataset.k);
+  else if (a==='copy-prev') copyPrevReady(t.dataset.k);
+  else if (a==='tailor'){ const s = data.students.find(x=>String(x.id)===String(t.dataset.sid)); if (s && confirm(`Make ${s.name} an own copy of this bundle to tailor? (${firstName(s.name)} moves from the ready bundle to the copy.)`)) tailorReady(t.dataset.id, t.dataset.sid); }
+  else if (a==='move-next') moveReadyNext(t.dataset.id);
+});
+
 /* bundle modal */
 function renderPicker(){
   const f = $('pFilter').value.trim().toLowerCase();
@@ -3011,7 +3249,7 @@ function renderPicker(){
 function updatePickCount(){ $('pCount').textContent = pickSel.size ? `(${pickSel.size} selected)` : ''; }
 function updateEnd(){ $('pEnd').textContent = $('pStart').value ? fmtDate(addMonths($('pStart').value, BUNDLE_MONTHS)) : '–'; }
 function openBundleModal(p){
-  renewFrom = null;
+  renewFrom = null; readyNew = null;
   $('pkgForm').reset();
   $('pId').value = p ? p.id : '';
   $('mPkgTitle').textContent = p ? 'Edit bundle' : 'Create 3-month bundle';
@@ -3029,7 +3267,8 @@ async function saveBundle(e){
   const id = $('pId').value;
   const p = data.packages.find(x=>x.id===id);
   const vals = {title:$('pTitle').value.trim(), start:$('pStart').value || today(), months:BUNDLE_MONTHS, notes:$('pNotes').value.trim(), linkIds:ids};
-  const row = {...(p||{id:uid('pkg')}), ...vals};
+  const row = {...(p||{id: readyNew ? readyNew.id : uid('pkg')}), ...vals};
+  readyNew = null;
   busy(e.submitter, true);
   try { await q(sb.from('bundles').upsert(bundleRow(row))); } catch(err){ busy(e.submitter,false); return; }
   busy(e.submitter, false);
@@ -3473,6 +3712,7 @@ document.addEventListener('click', e=>{
   else if (a==='del-entry') deleteEntry(id);
   else if (a==='renew-bundle') renewBundle(id);
   else if (a==='followed-up') markFollowedUp(id);
+  else if (a==='del-bundle-note') deleteBundleNote(id, t.dataset.i);
   else if (a==='add-apps') addApps();
   else if (a==='new-bundle') openBundleModal(null);
   else if (a==='edit-bundle') openBundleModal(data.packages.find(p=>p.id===id));
@@ -3508,7 +3748,12 @@ document.addEventListener('click', e=>{
   else if (a==='logout'){ sb.auth.signOut().then(()=>location.reload()); }
   else if (a==='close') closeAll();
 });
-document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{ if (e.target===o) closeAll(); }));
+/* close a window by clicking the dark background – but not when you were selecting text in a field and let go outside it */
+document.querySelectorAll('.overlay').forEach(o=>{
+  let downOnBg = false;
+  o.addEventListener('pointerdown', e=>{ downOnBg = e.target===o; });
+  o.addEventListener('click', e=>{ if (e.target===o && downOnBg) closeAll(); downOnBg = false; });
+});
 document.addEventListener('keydown',e=>{ if (e.key==='Escape') closeAll(); });
 $('searchInput').addEventListener('input', renderLibrary);
 $('bands').addEventListener('change', e=>{ const c = e.target; if (!c.dataset || !c.dataset.sel) return; c.checked ? selected.add(c.dataset.sel) : selected.delete(c.dataset.sel); c.closest('.card').classList.toggle('is-selected', c.checked); updateSelBar(); });
@@ -3519,6 +3764,7 @@ $('fImageAuto').addEventListener('click', ()=>{ $('fImage').value=''; $('fImageF
 $('fImagePick').innerHTML = `<option value="">🖼 Use one of my app pictures…</option>` + Object.keys(BUILTIN_PREVIEWS).filter(k=>k.includes('/')).sort((a,b)=>appPicName(a).localeCompare(appPicName(b))).map(k=>`<option value="${esc(k)}">${esc(appPicName(k))}</option>`).join('');
 $('fImagePick').addEventListener('change', e=>{ if (!e.target.value) return; $('fImage').value = 'builtin:' + e.target.value; $('fImageFile').value = ''; updateLinkPreview(); });
 $('fLevel').addEventListener('change',()=>{ toggleExamField(); fillSkillPicker((document.querySelector('input[name=fSkill]:checked')||{}).value); });
+$('fExam').addEventListener('change',()=>{ fillSkillPicker((document.querySelector('input[name=fSkill]:checked')||{}).value); });
 $('pFilter').addEventListener('input', renderPicker);
 $('pPicker').addEventListener('change', e=>{ const c=e.target; if (c.name!=='pkgLinks') return; c.checked ? pickSel.add(c.value) : pickSel.delete(c.value); updatePickCount(); });
 $('pQuick').addEventListener('change', e=>{ const h=findHub(e.target.value); if (!h) return; const ls=hubLinks(h); ls.forEach(l=>pickSel.add(l.id)); renderPicker(); toast(`${plural(ls.length,'link')} from ${h.title} added`); e.target.value=''; });
@@ -3567,7 +3813,7 @@ $('invForm').addEventListener('submit', submitInvite);
 let st = {sid:null, portal:null, subs:[], tab:'links', urls:{}, hub:null, skill:'ALL', show:'all', q:''};
 /* student page: same layout as the teacher's library — hubs on the left, search + skill chips, skill bands with cards */
 const ST_TAG = {'ext:video':'Video', 'ext:ted':'TED talk', 'ext:tedvocab':'TED vocabulary', 'ext:pdf':'PDF', 'eng:bimrev':'Revision'};
-const ST_CHIPS = [...OWN_SKILLS, 'GROUP:eng', 'presentation', 'hr', 'office', 'jeweller', 'hairdresser', 'GROUP:ext'];
+const ST_CHIPS = [...EXAM_SECTIONS, ...OWN_SKILLS, 'GROUP:eng', 'presentation', 'hr', 'office', 'jeweller', 'hairdresser', 'GROUP:ext'];
 function stDashPrefs(){
   if (st.hub !== null && st.hub !== undefined) return;
   st.hub = ''; st.skill = 'ALL'; st.show = st.show || 'all'; st.q = st.q || '';
