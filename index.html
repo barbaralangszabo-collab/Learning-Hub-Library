@@ -411,6 +411,14 @@ body.preview-mode .tabs,body.preview-mode .top-actions,body.preview-mode .stat-p
 .thumb .fallback{position:absolute;inset:0;display:grid;place-items:center;align-content:center;gap:8px;padding:0 14px;text-align:center;word-break:break-word;color:var(--sk-ink);font-family:var(--ui);font-weight:700;font-size:.85rem}
 .thumb .fallback img{width:40px;height:40px;object-fit:contain;border-radius:10px;background:var(--surface);padding:6px;box-shadow:var(--shadow)}
 .thumb.failed > img{display:none}
+/* your own apps always get a picture: while the screenshot loads, or if none can be made, a Piece of Cake title card */
+.thumb:not(.loaded) .fallback.app-tile{display:grid}
+.thumb .fallback.app-tile{background:linear-gradient(135deg,var(--mint-soft),var(--sk) 55%,var(--surface-2));color:var(--ink);gap:4px;padding:10px 16px}
+.thumb .fallback.app-tile .cake{font-size:2rem;line-height:1;filter:drop-shadow(0 3px 6px rgba(0,0,0,.12))}
+.thumb .fallback.app-tile b{font-family:var(--display, var(--ui));font-size:1.02rem;line-height:1.25;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.thumb .fallback.app-tile small{font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);font-weight:800}
+.lrow .thumb .fallback.app-tile b,.lrow .thumb .fallback.app-tile small{display:none}
+.lrow .thumb .fallback.app-tile .cake{font-size:1.3rem}
 .thumb:not(.failed) .fallback{display:none}
 .card{overflow:hidden}
 .prev-box{display:grid;grid-template-columns:180px minmax(0,1fr);gap:12px;align-items:start}
@@ -1454,9 +1462,10 @@ const CORE = ['speaking','grammar','listening','vocabulary'];
 const OWN_SKILLS = ['speaking','vocabulary','grammar','listening','podcasts','reading','writing','cultural corner','sample tests'];
 const EXAM_SECTIONS = ['cae:mock'];
 /* sections shown in these levels even while they are still empty, so you can add links straight away */
-const SHOW_IN_LEVEL = {'reading':['Junior','B1','B2','C1'], 'podcasts':['B1','B2']};   /* shown only in that exam (SKILLS[x].exam) */
+const SHOW_IN_LEVEL = {'reading':['Junior','B1','B2','C1'], 'podcasts':['B1','B2'],
+  'writing':['Mini','Junior','A1','A2','B1','B2','C1','Exams','Professional English']};   /* shown only in that exam (SKILLS[x].exam) */
 const examOf = s => (SKILLS[s] || {}).exam || '';
-const PRO_SECTIONS = ['eng:interview','eng:bim','eng:bimrev','presentation','hr','office','jeweller','hairdresser'];
+const PRO_SECTIONS = ['eng:interview','eng:bim','eng:bimrev','presentation','writing','hr','office','jeweller','hairdresser'];
 const EXT_SECTIONS = ['ext:speaking','ext:vocabulary','ext:grammar','ext:listening','ext:reading','ext:writing','ext:culture','ext:tests','ext:pdf','ext:video','ext:ted','ext:tedvocab'];
 const NO_SKILL = {'Summer Camp':'🏕️','Baking with Alice':'🧁'};
 const COURSES = ['Summer Camp','Baking with Alice','Professional English'];
@@ -1690,7 +1699,7 @@ function pictureSources(url, image){
   if (PREFER_LIVE.has(key)) list.push(snapshotOf(url), builtinFor(url));
   else if (builtinFor(url)) list.push(builtinFor(url));
   else if (isExternal(url)) list.push(OG + url, snapshotOf(url));   /* the page's own share picture first (looked up once, see below), then a screenshot */
-  else list.push(snapshotOf(url));
+  else list.push(OG + url, snapshotOf(url));   /* your own app without a built-in picture: its share picture, then a screenshot */
   return [...new Set(list.filter(Boolean))];
 }
 /* move to the next picture source, or show the website icon when none is left */
@@ -1783,7 +1792,8 @@ function thumbHTML(url, image, title){
   return `<a class="thumb" href="${esc(url)}" target="_blank" rel="noopener noreferrer" tabindex="-1" aria-hidden="true">
     ${og ? `<img data-og="${esc(og)}" data-rest="${esc(JSON.stringify(rest))}" alt="" referrerpolicy="no-referrer" onload="thumbLoaded(this)" onerror="thumbNext(this)">` : ''}
     ${first && !og ? `<img src="${esc(first)}" data-rest="${esc(JSON.stringify(rest))}" alt="" loading="lazy" referrerpolicy="no-referrer" onload="thumbLoaded(this)" onerror="thumbNext(this)">` : ''}
-    <span class="fallback"><img src="${esc(faviconOf(url))}" alt="" loading="lazy" onerror="this.remove()">${esc(domain(url))}</span></a>`;
+    ${isExternal(url) ? `<span class="fallback"><img src="${esc(faviconOf(url))}" alt="" loading="lazy" onerror="this.remove()">${esc(domain(url))}</span>`
+      : `<span class="fallback app-tile"><span class="cake" aria-hidden="true">🍰</span><b>${esc(title || appPicName(urlKey(url)))}</b><small>Piece of Cake</small></span>`}</a>`;
 }
 /* look up a page's own share picture (og:image) so it can be saved with the link */
 async function findPicture(url, strict){
@@ -2790,7 +2800,7 @@ if (document.fonts) document.fonts.ready.then(()=>fitGrids());
 function renderChips(){
   $('skillChips').hidden = !!NO_SKILL[level];
   if (NO_SKILL[level]) return;
-  const list = level==='Professional English' ? ['GROUP:eng','presentation','hr','office','jeweller','hairdresser','GROUP:ext']
+  const list = level==='Professional English' ? ['GROUP:eng','presentation','writing','hr','office','jeweller','hairdresser','GROUP:ext']
     : [...(level==='Exams' ? EXAM_SECTIONS.filter(x=>exam===examOf(x)) : []), ...OWN_SKILLS,'GROUP:ext'];
   $('skillChips').innerHTML = `<button class="chip all" data-action="skill" data-skill="ALL" aria-pressed="${skill==='ALL'}">All</button>` +
     list.map(s=>{ const m = chipMeta(s); return `<button class="chip ${m.cls}" data-action="skill" data-skill="${esc(s)}" aria-pressed="${skill===s}"><span aria-hidden="true">${m.emoji}</span>${esc(m.label)}</button>`; }).join('');
@@ -2817,7 +2827,7 @@ function cardHTML(l){
 }
 function renderLibrary(){
   renderLevels(); renderExamTabs(); renderChips();
-  { const n = data.links.filter(l=>!l.image && isExternal(l.url) && !builtinFor(l.url)).length, b = $('findPics'); if (b){ b.hidden = !n; b.textContent = `🖼 Find pictures (${n})`; } }
+  { const n = data.links.filter(l=>!l.image && !builtinFor(l.url)).length, b = $('findPics'); if (b){ b.hidden = !n; b.textContent = `🖼 Find pictures (${n})`; } }
   if (!data.links.length){
     const hasLocal = !!localStorage.getItem(OLD_STORE_KEY);
     $('bands').innerHTML = `<div class="empty"><h3>Your online library is empty</h3>
@@ -2937,7 +2947,7 @@ async function saveLink(e){
       await q(sb.storage.from('link-previews').upload(path, pic, {contentType:pic.type||undefined}), 'Picture upload failed');
       l.image = sb.storage.from('link-previews').getPublicUrl(path).data.publicUrl;
     }
-    if (!l.image && isExternal(l.url) && !builtinFor(l.url)){ const pic = await findPicture(l.url); if (pic && pic!=='LIMIT') l.image = pic; }
+    if (!l.image && !builtinFor(l.url)){ const pic = await findPicture(l.url); if (pic && pic!=='LIMIT') l.image = pic; }
     await q(sb.from('links').upsert(linkRow(l)));
   } catch(err){ busy(btn,false); return; }
   busy(btn, false);
@@ -4147,8 +4157,8 @@ async function saveGive(e){
 
 /* ================= save preview pictures for external links ================= */
 async function findAllPictures(btn){
-  const todo = data.links.filter(l=>!l.image && isExternal(l.url) && !builtinFor(l.url));
-  if (!todo.length){ toast('Every external link already has a picture'); return; }
+  const todo = data.links.filter(l=>!l.image && !builtinFor(l.url));
+  if (!todo.length){ toast('Every link already has a picture'); return; }
   btn.disabled = true; let found = 0, done = 0, limit = false;
   for (const l of todo){
     btn.textContent = `🖼 Looking… ${done}/${todo.length}`;
