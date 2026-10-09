@@ -1407,8 +1407,8 @@ const SUPABASE_ANON_KEY = 'sb_publishable_0yLz6cSdEZe4Pe7y9GKxUA_fAcsvmrO';
 /* ================= configuration ================= */
 const OLD_STORE_KEY = 'englishkola_hub_data';     // the offline version's browser storage
 const SETTINGS_KEY  = 'learninghub_settings';
-const LEVELS = ['Mini','Junior','A2','B1','B2','C1','Exams','Summer Camp','Baking with Alice','Professional English'];
-const MAIN_LEVELS = 6;
+const LEVELS = ['Mini','Junior','A1','A2','B1','B2','C1','Exams','Summer Camp','Baking with Alice','Professional English'];
+const MAIN_LEVELS = 7;
 const EXAMS  = ['Érettségi','CAE'];
 const EXAM_NOTE = {'Érettségi':'Hungarian school-leaving','CAE':'C1 Advanced'};
 const SKILLS = {
@@ -1460,7 +1460,7 @@ const PRO_SECTIONS = ['eng:interview','eng:bim','eng:bimrev','presentation','hr'
 const EXT_SECTIONS = ['ext:speaking','ext:vocabulary','ext:grammar','ext:listening','ext:reading','ext:writing','ext:culture','ext:tests','ext:pdf','ext:video','ext:ted','ext:tedvocab'];
 const NO_SKILL = {'Summer Camp':'🏕️','Baking with Alice':'🧁'};
 const COURSES = ['Summer Camp','Baking with Alice','Professional English'];
-const HUB_EMOJI = {'Mini':'🐣','Junior':'🧒','A2':'🌱','B1':'🌿','B2':'🌳','C1':'🏔️','Érettségi':'📜','CAE':'🏅','Summer Camp':'🏕️','Baking with Alice':'🧁','Professional English':'💼'};
+const HUB_EMOJI = {'Mini':'🐣','Junior':'🧒','A1':'🌰','A2':'🌱','B1':'🌿','B2':'🌳','C1':'🏔️','Érettségi':'📜','CAE':'🏅','Summer Camp':'🏕️','Baking with Alice':'🧁','Professional English':'💼'};
 const BUNDLE_MONTHS = 3;
 const MAX_FILE_MB = 15;
 const ALL_SKILLS = [...EXAM_SECTIONS, ...OWN_SKILLS, ...PRO_SECTIONS, ...EXT_SECTIONS, 'general'];
@@ -1659,6 +1659,8 @@ const BUILTIN_NORM = Object.fromEntries(Object.entries(BUILTIN_PREVIEWS).map(([k
 function builtinFor(url){
   const key = urlKey(url); if (BUILTIN_PREVIEWS[key]) return BUILTIN_PREVIEWS[key];
   const n = normKey(key); if (BUILTIN_NORM[n]) return BUILTIN_NORM[n];
+  const slug = n.split('/').filter(Boolean).pop() || '', sub = (n.split('/')[0]||'').split('.')[0];
+  for (const cand of [slug, sub]){ if (cand && cand.length > 6){ const hit = Object.keys(BUILTIN_NORM).find(k=>k.split('/').pop()===cand); if (hit) return BUILTIN_NORM[hit]; } }
   if (/level-?up/.test(n)){
     if (/b2/.test(n) && !/c1|cae/.test(n)) return BUILTIN_PREVIEWS['barbaralangszabo-collab.github.io/level-up-b2-b'];
     if (/b1/.test(n) && !/c1|cae/.test(n)) return BUILTIN_PREVIEWS['barbaralangszabo-collab.github.io/level-up--b1-'];
