@@ -4348,7 +4348,9 @@ async function enterTeacher(){
   document.body.classList.toggle('partner-mode', ROLE==='partner');
   document.body.classList.toggle('partner-ready', partnerReady);
   if (ok.error || !ok.data){
-    gate(`<h2>Not a teacher account</h2><p>You are logged in, but this email isn't on the teacher list. Add it to the <code>teachers</code> table (step 6 of the setup file).</p>
+    let who = ''; try { const u = await sb.auth.getUser(); who = (u.data && u.data.user && u.data.user.email) || ''; } catch(_){}
+    gate(`<h2>Not a teacher account</h2><p>You are logged in as <b>${esc(who || 'this email')}</b>, but this email is not on the teacher list.</p>
+      <p>Partner teachers: ask Barbara to check that exactly this email address is under <b>Sales → ⚙️ Prices &amp; partners</b>.</p>
       <button class="btn btn-outline" id="lgOut">Log out</button>`);
     $('lgOut').addEventListener('click', ()=>sb.auth.signOut().then(()=>location.reload()));
     return;
